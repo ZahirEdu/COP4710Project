@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box login"> 
+            <form action="">
+                <h1>Login</h1>
+                <div class="inputBox">
+                    <input type="text" id="email" placeholder="Email" required><i class='bx bxs-envelope' ></i>
+                 </div>
+                 <div class="inputBox">
+                    <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
+                </div>
+   
+                <button type="submit" class="button">Login</button>
+
+                <div class ="formText">
+                    <span>Don't have an account?</span>
+                    <a href="#">Sign up</a>
+                </div>
+                
+            </form>
+        </div>
+        <div class="form-box register"> 
+            <form action="">
+                <h1>Create Account</h1>
+                <div class="inputBox">
+                    <input type="text" id="name" placeholder="Name" required><i class='bx bxs-user'></i>
+                 </div>
+
+                <div class="inputBox">
+                    <input type="text" id="email" placeholder="Email" required><i class='bx bxs-envelope' ></i>
+                 </div>
+                 <div class="inputBox">
+                    <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
+                </div>
+
+                <div class="selectBox">
+                    <label for="university">University:</label>
+                    <select id="university" name="University">
+                        <option value="">Loading universities...</option>
+                       </select>
+                </div>
+
+                
+                <button type="submit" class="button">Create Account</button>
+    
+
+                <div class ="formText">
+                    <span>Already have an account?</span>
+                    <a href="#">Login</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box create"> 
+            <form action="">
+                <h1>Create University</h1>
+                <div class="inputBox">
+                    <input type="text" id="name" placeholder="Name" required><i class='bx bxs-user'></i>
+                 </div>
+
+                <div class="inputBox">
+                    <input type="text" id="email" placeholder="Email" required><i class='bx bxs-envelope' ></i>
+                 </div>
+                 <div class="inputBox">
+                    <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
+                </div>
+
+                <div class="inputBox">
+                    <input type="text" id="university" placeholder="University" required><i class='bx bxs-graduation'></i>
+                </div>
+
+                
+                <button type="submit" class="button">Create Account</button>
+    
+                <div class ="formText">
+                    <span>Not trying to create a university?</span>
+                    <a href="#">Login</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="toggle-box">
+            <div class="panel">
+                <i class='bx bx-calendar'></i>
+                <h1>UniEvents</h1>
+                <h2>Want to create a university?</h2>
+                <button type="submit" class="button2">Create University</button>
+            </div>
+
+        </div>
+    </div>
+    <script src="code.js"></script>
+</body>
+</html>
