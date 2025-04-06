@@ -21,7 +21,7 @@ function isSuperAdmin($conn, $UID) {
     $result = $stmt->get_result();
     
     if ($row = $result->fetch_assoc()) {
-        return $row['role'] === 'superAdmin';
+        return $row['role'] === 'superadmin';
     }
     return false;
 }
