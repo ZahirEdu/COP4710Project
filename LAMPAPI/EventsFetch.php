@@ -65,20 +65,19 @@ try {
               )
               ORDER BY e.start_time ASC";
 
-    $stmt = $conn->prepare($query);
+$stmt = $conn->prepare($query);
 
-    if (!$stmt) {
-        throw new Exception("Error preparing query: " . $conn->error);
-    }
+if (!$stmt) {
+    throw new Exception("Error preparing query: " . $conn->error);
+}
 
-    if ($universityID) {
-        $stmt->bind_param("ii", $universityID, $UID);
-    } else {
-        // If no universityID is provided, we still need to bind the UID for the RSO check.
-        // To handle the 'private' condition when universityID is null, we can use a placeholder
-        // that will never match, effectively skipping that OR condition.
-        $stmt->bind_param("ii", -1, $UID); // Assuming -1 is not a valid universityID
-    }
+if ($universityID) {
+    $stmt->bind_param("ii", $universityID, $UID); // Likely line 80
+} else {
+    // If no universityID is provided, bind a placeholder that won't match for private events
+    $dummyUniversityID = -1;
+    $stmt->bind_param("ii", $dummyUniversityID, $UID); // Corrected line
+}
 
     $stmt->execute();
     $result = $stmt->get_result();
