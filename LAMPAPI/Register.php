@@ -22,7 +22,7 @@ function returnWithError($err)
 try {
     $inData = getRequestInfo();
 
-    $required = ['username', 'email', 'password', 'name', 'role', 'universityID'];
+    $required = ['email', 'password', 'name', 'role', 'universityID'];
     foreach ($required as $field) {
         if (empty($inData[$field])) {
             returnWithError("Missing required field: $field");
