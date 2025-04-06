@@ -13,10 +13,11 @@ try {
         throw new Exception("Database connection failed: " . $conn->connect_error);
     }
 
-    // Get the UID from the GET request (assuming frontend sends it this way)
-    $UID = $_GET['UID'] ?? null;
-    $universityID = $_GET['universityID'] ?? null; // Optional for private events
+    $input = json_decode(file_get_contents('php://input'), true);
+    $UID = $input['UID'] ?? null;
+    $universityID = $input['universityID'] ?? null;
 
+    
     if (!$UID) {
         http_response_code(400);
         echo json_encode(["error" => "UID parameter is required in the URL"]);
