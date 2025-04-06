@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 header("Content-Type: application/json");
 
 // Database connection details
@@ -17,7 +20,7 @@ try {
     $UID = $input['UID'] ?? null;
     $universityID = $input['universityID'] ?? null;
 
-    
+
     if (!$UID) {
         http_response_code(400);
         echo json_encode(["error" => "UID parameter is required in the URL"]);
