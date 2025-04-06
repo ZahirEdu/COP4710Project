@@ -147,6 +147,8 @@ try {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
+        $rsoIDValue = $inData['rsoID'] ?? null;
+
         $stmt->bind_param(
             "ssssssisssiis",
             $inData['name'],
@@ -159,7 +161,7 @@ try {
             $inData['contactEmail'],
             $inData['eventType'],
             $inData['universityID'],
-            $inData['rsoID'] ?? null,
+            $rsoIDValue,
             $inData['UID'],
             $approvalStatus
         );
