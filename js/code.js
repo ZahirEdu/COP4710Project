@@ -87,6 +87,7 @@ function doLogin() {
                 role = jsonObject.role;
 
                 saveCookie();
+                document.getElementById("loginResult").innerHTML = "Login successful!";
             } else {
                 document.getElementById("loginResult").innerHTML = "Login failed. Please try again.";
             }
