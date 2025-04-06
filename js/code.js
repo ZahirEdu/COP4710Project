@@ -204,7 +204,7 @@ async function fetchUniversities() {
         };
         xhr.send(); // No data to send for a GET request
     } catch (err) {
-        universitySelect.innerHTML = '<option value="">Failed to load universities</option>';
+        universitySelect.innerHTML = '<option value="">Failed to load</option>';
         console.error("Error fetching universities:", err.message);
     }
 }
