@@ -41,7 +41,7 @@ try {
                 e.rsoID,
                 r.name as rsoName,
                 e.createdBy,
-                creator.username as creatorUsername,
+                creator.name as creatorUsername,
                 e.approvalStatus
               FROM events e
               LEFT JOIN eventCat c ON e.catID = c.catID
