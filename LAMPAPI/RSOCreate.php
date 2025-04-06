@@ -1,25 +1,38 @@
 <?php
+header('Content-Type: application/json');
+
 $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(["status" => "error", "message" => "Connection failed: " . $conn->connect_error]));
 }
 
-$name = $_POST['name'] ?? null;
-$description = $_POST['description'] ?? null;
-$universityID = $_POST['universityID'] ?? null;
-$adminID = $_POST['adminID'] ?? null; /
-$status = $_POST['status'] ?? null; 
+// Get raw JSON data from the request body
+$json_data = file_get_contents('php://input');
+$data = json_decode($json_data, true);
+
+if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["status" => "error", "message" => "Invalid JSON data"]);
+    $conn->close();
+    exit();
+}
+
+$name = $data['name'] ?? null;
+$description = $data['description'] ?? null;
+$universityID = $data['universityID'] ?? null;
+$adminID = $data['adminID'] ?? null;
+$status = $data['status'] ?? null;
 
 if (empty($name) || $universityID === null || $adminID === null) {
-    $response = array("status" => "error", "message" => "Name, universityID, and adminID are required");
-    echo json_encode($response);
+    http_response_code(400); // Bad Request
+    echo json_encode(["status" => "error", "message" => "Name, universityID, and adminID are required in JSON"]);
     $conn->close();
     exit();
 }
 
 if (!is_numeric($universityID) || !is_numeric($adminID)) {
-    $response = array("status" => "error", "message" => "universityID and adminID must be numeric");
-    echo json_encode($response);
+    http_response_code(400); // Bad Request
+    echo json_encode(["status" => "error", "message" => "universityID and adminID must be numeric in JSON"]);
     $conn->close();
     exit();
 }
@@ -28,14 +41,15 @@ $stmt = $conn->prepare("INSERT INTO rsos (name, description, universityID, admin
 $stmt->bind_param("ssiis", $name, $description, $universityID, $adminID, $status);
 
 if ($stmt->execute()) {
-    $response = array("status" => "success", "message" => "rso created successfully ", "rsoID" => $conn->insert_id);
+    http_response_code(201); // Created
+    $response = ["status" => "success", "message" => "rso created successfully ", "rsoID" => $conn->insert_id];
 } else {
-    $response = array("status" => "error", "message" => "error creating RSO: " . $stmt->error);
+    http_response_code(500); // Internal Server Error
+    $response = ["status" => "error", "message" => "error creating RSO: " . $stmt->error];
 }
 
 $stmt->close();
 $conn->close();
 
-header('Content-Type: application/json');
 echo json_encode($response);
 ?>
