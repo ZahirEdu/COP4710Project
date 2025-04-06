@@ -62,7 +62,7 @@ try {
         $stmt->close();
 
         $locationName = $inData["uniName"];
-        $stmt = $conn->prepare("INSERT INTO locations (name, latitude, longitude) VALUES (?, 0, 0)");
+        $stmt = $conn->prepare("INSERT INTO locations (name, lat, lon) VALUES (?, 0, 0)");
         $stmt->bind_param("s", $locationName);
         
         if (!$stmt->execute()) {
