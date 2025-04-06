@@ -1,38 +1,49 @@
 <?php
+header('Content-Type: application/json');
+
 $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 
 if ($conn->connect_error) {
-    die("connection failed: " . $conn->connect_error);
+    die(json_encode(["status" => "error", "message" => "connection failed: " . $conn->connect_error]));
 }
 
-$address = $_GET['address'] ?? null;
+// Get raw JSON data from the request body
+$json_data = file_get_contents('php://input');
+$data = json_decode($json_data, true);
+
+if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["status" => "error", "message" => "Invalid JSON data"]);
+    $conn->close();
+    exit();
+}
+
+$address = $data['address'] ?? null;
 
 if (empty($address)) {
-    $response = array("status" => "error", "message" => "address is missing");
-    header('Content-Type: application/json');
-    echo json_encode($response);
+    http_response_code(400); // Bad Request
+    echo json_encode(["status" => "error", "message" => "address is missing in JSON"]);
     $conn->close();
     exit();
 }
 
 $stmt = $conn->prepare("SELECT locationID, name, lat, lon, address, place_id, room FROM locations WHERE address = ?");
-$stmt->bind_param("s", $address); 
+$stmt->bind_param("s", $address);
 
 $stmt->execute();
 
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-
     $locations = $result->fetch_all(MYSQLI_ASSOC);
-    $response = array("status" => "success", "locations" => $locations);
+    $response = ["status" => "success", "locations" => $locations];
 } else {
-    $response = array("status" => "error", "message" => "no location found");
+    $response = ["status" => "error", "message" => "no location found"];
+    http_response_code(404); // Not Found
 }
 
 $stmt->close();
 $conn->close();
 
-header('Content-Type: application/json');
 echo json_encode($response);
 ?>
