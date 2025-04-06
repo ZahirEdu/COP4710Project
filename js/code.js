@@ -169,35 +169,43 @@ function readCookie()
 
 async function fetchUniversities() {
     const universitySelect = document.getElementById('university');
-    
+    const url = urlBase + '/UniversitiesFetch.' + extension; // Corrected URL
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true); // Using GET as no data is being sent in the body
+
     try {
-        const response = await fetch('UeniversitiesFetch.php');
-        const data = await response.json();
-        
-        if (data.success) {
-            // Clear existing options
-            universitySelect.innerHTML = '';
-            
-            // Add default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Select a university';
-            universitySelect.appendChild(defaultOption);
-            
-            // Add universities from database
-            data.universities.forEach(university => {
-                const option = document.createElement('option');
-                option.value = university.universityID;
-                option.textContent = university.name;
-                universitySelect.appendChild(option);
-            });
-        } else {
-            universitySelect.innerHTML = '<option value="">Error loading universities</option>';
-            console.error(data.message);
-        }
-    } catch (error) {
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+
+                if (jsonObject.success) {
+                    universitySelect.innerHTML = '';
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'Select a university';
+                    universitySelect.appendChild(defaultOption);
+
+                    jsonObject.universities.forEach(university => {
+                        const option = document.createElement('option');
+                        option.value = university.universityID;
+                        option.textContent = university.name;
+                        universitySelect.appendChild(option);
+                    });
+                } else {
+                    universitySelect.innerHTML = '<option value="">Error loading universities</option>';
+                    console.error("Error loading universities:", jsonObject.error);
+                }
+            } else if (this.readyState === 4) {
+                // Handle non-200 status codes (errors)
+                universitySelect.innerHTML = '<option value="">Error loading universities</option>';
+                console.error("Error loading universities (status " + this.status + ")");
+            }
+        };
+        xhr.send(); // No data to send for a GET request
+    } catch (err) {
         universitySelect.innerHTML = '<option value="">Failed to load universities</option>';
-        console.error('Fetch error:', error);
+        console.error("Error fetching universities:", err.message);
     }
 }
 
