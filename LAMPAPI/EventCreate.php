@@ -15,15 +15,20 @@ function returnWithError($err) {
     exit();
 }
 
+// Database connection details (replace with your actual credentials)
+$db_host = "localhost";
+$db_user = "Zahir";
+$db_pass = "k9m2q5i0";
+$db_name = "UniversityEventManagement";
+
 try {
     $inData = getRequestInfo();
-    
+
     //checking all fields
-    $requiredFields = ['name', 'description', 'catID', 'start_time', 'end_time', 
-                        'date', 'locationID', 'contactPhone', 'contactEmail', 
-                        'eventType', 'UID', 'universityIF'
-    ];
-    
+    $requiredFields = ['name', 'description', 'catID', 'start_time', 'end_time',
+                             'locationID', 'contactPhone', 'contactEmail',
+                             'eventType', 'UID', 'universityID'];
+
     foreach ($requiredFields as $field) {
         if (empty($inData[$field])) {
             returnWithError("missing required field: $field");
@@ -31,7 +36,7 @@ try {
     }
 
     //check rso
-    if ($inData['eventType'] === 'rso' && empty($inData['rsoIF'])) {
+    if ($inData['eventType'] === 'rso' && empty($inData['rsoID'])) {
         returnWithError("RSO ID is required for RSO events");
     }
 
@@ -46,12 +51,12 @@ try {
         //check user role and if they are in rso
         $userRole = null;
         $isRSOAdmin = false;
-        
+
         $stmt = $conn->prepare("SELECT role FROM users WHERE UID = ?");
         $stmt->bind_param("i", $inData['UID']);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($row = $result->fetch_assoc()) {
             $userRole = $row['role'];
         } else {
@@ -59,27 +64,27 @@ try {
         }
         $stmt->close();
 
-        //rso events, check membership status and admin 
+        //rso events, check membership status and admin
         if ($inData['eventType'] === 'rso') {
             $stmt = $conn->prepare("SELECT is_admin FROM rsoMembers WHERE rsoID = ? AND UID = ?");
             $stmt->bind_param("ii", $inData['rsoID'], $inData['UID']);
             $stmt->execute();
             $result = $stmt->get_result();
-            
+
             if ($result->num_rows === 0) {
                 throw new Exception("not a member of rso");
             }
-            
+
             $row = $result->fetch_assoc();
             $isRSOAdmin = (bool)$row['is_admin'];
             $stmt->close();
         }
 
-        //check if locaton exists
+        //check if location exists
         $stmt = $conn->prepare("SELECT locationID FROM locations WHERE locationID = ?");
         $stmt->bind_param("i", $inData['locationID']);
         $stmt->execute();
-        
+
         if ($stmt->get_result()->num_rows === 0) {
             throw new Exception("location does not exists");
         }
@@ -87,29 +92,29 @@ try {
 
         //check time conflicts
         $stmt = $conn->prepare("
-            SELECT e.eventID, e.name 
+            SELECT e.eventID, e.name
             FROM events e
             JOIN locations l ON e.locationID = l.locationID
             WHERE e.locationID = ?
             AND (
-                (e.start_time < ? AND e.end_time > ?) OR  
-                (e.start_time < ? AND e.end_time > ?) OR  
-                (e.start_time >= ? AND e.end_time <= ?)   
+                (e.start_time < ? AND e.end_time > ?) OR
+                (e.start_time < ? AND e.end_time > ?) OR
+                (e.start_time >= ? AND e.end_time <= ?)
             )
             AND e.approvalStatus = 'approved'
         ");
-        
+
         $stmt->bind_param(
-            "issssss", 
+            "issssss",
             $inData['locationID'],
             $inData['end_time'], $inData['start_time'],
             $inData['end_time'], $inData['start_time'],
             $inData['start_time'], $inData['end_time']
         );
-        
+
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result->num_rows > 0) {
             $conflictingEvent = $result->fetch_assoc();
             throw new Exception("time conflict with event: " . $conflictingEvent['name']);
@@ -118,7 +123,7 @@ try {
 
         //check approval status
         $approvalStatus = 'pending';
-        
+
         if ($inData['eventType'] === 'public') {
             $approvalStatus = 'approved';
         } elseif ($userRole === 'superAdmin') {
@@ -135,9 +140,9 @@ try {
                 universityID, rsoID, createdBy, approvalStatus
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        
+
         $stmt->bind_param(
-            "ssssssisssiiis",
+            "ssssssisssiis",
             $inData['name'],
             $inData['description'],
             $inData['catID'],
@@ -152,16 +157,16 @@ try {
             $inData['UID'],
             $approvalStatus
         );
-        
+
         if (!$stmt->execute()) {
             throw new Exception("failed to create event: " . $stmt->error);
         }
-        
+
         $eventID = $conn->insert_id;
         $stmt->close();
 
         $conn->commit();
-        
+
         returnWithInfo("event created successfully", $eventID);
 
     } catch (Exception $e) {
