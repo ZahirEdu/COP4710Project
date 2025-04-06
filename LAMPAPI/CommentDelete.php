@@ -9,10 +9,7 @@ function getRequestInfo()
 
 function returnWithInfo($message)
 {
-    echo json_encode([
-        "message" => $message,
-        "error" => ""
-    ]);
+    echo json_encode(["message" => $message,"error" => ""]);
     exit();
 }
 
@@ -25,21 +22,20 @@ function returnWithError($err)
 try {
     $inData = getRequestInfo();
     
-    // Validate required fields
+    //checking if fields are present
     if (empty($inData["commentID"])) {
-        returnWithError("Missing required field: commentID");
+        returnWithError("missing required field: commentID");
     }
     if (empty($inData["UID"])) {
-        returnWithError("Missing required field: UID");
+        returnWithError("missing required field: UID");
     }
 
-    // Connect to database
     $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
     if ($conn->connect_error) {
-        returnWithError("Database connection failed: " . $conn->connect_error);
+        returnWithError("database connection failed: " . $conn->connect_error);
     }
 
-    // Verify the comment exists and belongs to this user
+    //checking that comment exits and belongs to user
     $stmt = $conn->prepare("SELECT commentID FROM eventComments WHERE commentID = ? AND UID = ?");
     $stmt->bind_param("ii", $inData["commentID"], $inData["UID"]);
     $stmt->execute();
@@ -48,22 +44,22 @@ try {
     if ($result->num_rows == 0) {
         $stmt->close();
         $conn->close();
-        returnWithError("Comment not found or you don't have permission to delete it");
+        returnWithError("comment not found or unauthorized");
     }
     $stmt->close();
 
-    // Delete the comment
+    //delete comment
     $stmt = $conn->prepare("DELETE FROM eventComments WHERE commentID = ? AND UID = ?");
     $stmt->bind_param("ii", $inData["commentID"], $inData["UID"]);
 
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
-            returnWithInfo("Comment deleted successfully");
+            returnWithInfo("comment deleted successfully");
         } else {
-            returnWithError("No comment was deleted");
+            returnWithError("no comment was deleted");
         }
     } else {
-        returnWithError("Failed to delete comment: " . $stmt->error);
+        returnWithError("failed to delete comment: " . $stmt->error);
     }
 
     $stmt->close();

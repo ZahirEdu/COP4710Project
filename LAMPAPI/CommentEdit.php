@@ -8,10 +8,7 @@ function getRequestInfo()
 
 function returnWithInfo($message)
 {
-    echo json_encode([
-        "message" => $message,
-        "error" => ""
-    ]);
+    echo json_encode(["message" => $message,"error" => ""]);
     exit();
 }
 
@@ -24,21 +21,20 @@ function returnWithError($err)
 try {
     $inData = getRequestInfo();
     
-    // Validate required fields
+    //checking fields
     $requiredFields = ['commentID', 'UID', 'commentText'];
     foreach ($requiredFields as $field) {
         if (empty($inData[$field])) {
-            returnWithError("Missing required field: $field");
+            returnWithError("missing required field: $field");
         }
     }
 
-    // Connect to database
     $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
     if ($conn->connect_error) {
-        returnWithError("Database connection failed: " . $conn->connect_error);
+        returnWithError("database connection failed: " . $conn->connect_error);
     }
 
-    // Verify the comment exists and belongs to this user
+    //making sure comment belongs to user
     $stmt = $conn->prepare("SELECT commentID FROM eventComments WHERE commentID = ? AND UID = ?");
     $stmt->bind_param("ii", $inData["commentID"], $inData["UID"]);
     $stmt->execute();
@@ -47,31 +43,28 @@ try {
     if ($result->num_rows == 0) {
         $stmt->close();
         $conn->close();
-        returnWithError("Comment not found or you don't have permission to edit it");
+        returnWithError("comment not found or you don't have permission to edit it");
     }
     $stmt->close();
 
-    // Update the comment text
+    //updaiting comment
     $stmt = $conn->prepare("UPDATE eventComments SET commentText = ?, updatedAtt = CURRENT_TIMESTAMP WHERE commentID = ?");
-    $stmt->bind_param("si", 
-        $inData["commentText"],
-        $inData["commentID"]
-    );
+    $stmt->bind_param("si", $inData["commentText"],$inData["commentID"]);
 
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
-            returnWithInfo("Comment updated successfully");
+            returnWithInfo("comment updated successfully");
         } else {
-            returnWithError("No changes made to comment");
+            returnWithError("no changes made");
         }
     } else {
-        returnWithError("Failed to update comment: " . $stmt->error);
+        returnWithError("failed to update comment: " . $stmt->error);
     }
 
     $stmt->close();
     $conn->close();
 
 } catch (Exception $e) {
-    returnWithError("An error occurred: " . $e->getMessage());
+    returnWithError("an error occurred: " . $e->getMessage());
 }
 ?>

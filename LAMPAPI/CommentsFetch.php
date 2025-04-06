@@ -1,25 +1,18 @@
 <?php
 header("Content-Type: application/json");
 
-// Database configuration
-$db_host = "localhost";
-$db_user = "Zahir";
-$db_pass = "k9m2q5i0";
-$db_name = "UniversityEventManagement";
-
-// Get the event ID from request
+//get eventID
 $input = json_decode(file_get_contents('php://input'), true);
 $eventID = $input['eventID'] ?? null;
 
-// Validate input
+//check event ID
 if (!$eventID) {
     http_response_code(400);
     echo json_encode(["error" => "eventID is required"]);
     exit();
 }
 
-// Connect to database
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+$conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(["error" => "Database connection failed"]);
@@ -27,17 +20,7 @@ if ($conn->connect_error) {
 }
 
 try {
-    // Prepare query to get comments with user information
-    $query = "SELECT 
-                c.commentID,
-                c.eventID,
-                c.UID,
-                u.username,
-                u.first_name,
-                u.last_name,
-                c.commentText,
-                c.createdAt,
-                c.updatedAtt
+    $query = "SELECT c.commentID, c.eventID, c.UID, c.commentText, c.createdAt, c.updatedAtt
               FROM eventComments c
               JOIN users u ON c.UID = u.UID
               WHERE c.eventID = ?
@@ -50,13 +33,9 @@ try {
     
     $comments = [];
     while ($row = $result->fetch_assoc()) {
-        // Format timestamps
-        $row['createdAt'] = date('Y-m-d H:i:s', strtotime($row['createdAt']));
-        $row['updatedAtt'] = date('Y-m-d H:i:s', strtotime($row['updatedAtt']));
-        
-        // Add user display name
-        $row['userDisplayName'] = $row['first_name'] . ' ' . $row['last_name'];
-        
+        $row['createdAt'] = date('m/d/Y', strtotime($row['createdAt']));
+        $row['updatedAtt'] = date('m/d/Y', strtotime($row['updatedAtt']));
+              
         $comments[] = $row;
     }
     

@@ -1,19 +1,18 @@
 <?php
 header("Content-Type: application/json");
 
-// Get request data
 $input = json_decode(file_get_contents('php://input'), true);
 $UID = $input['UID'] ?? null;
 $universityID = $input['universityID'] ?? null;
 
-// Validate input
+
 if (!$UID) {
     http_response_code(400);
     echo json_encode(["error" => "UID is required"]);
     exit();
 }
 
-// Connect to database
+e
 $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 if ($conn->connect_error) {
     http_response_code(500);
@@ -22,42 +21,38 @@ if ($conn->connect_error) {
 }
 
 try {
-    // Prepare the base query with all requested fields
     $query = "SELECT 
-                e.event_id as eventID,
+                e.eventID
                 e.name,
                 e.description,
-                e.category_id as catID,
+                e.catID,
                 e.start_time,
                 e.end_time,
-                e.location_id as locationID,
-                e.contact_phone as contactPhone,
-                e.contact_email as contactEmail,
-                e.event_type as eventType,
-                e.university_id as universityID,
-                e.rso_id as rsoID,
-                e.approval_status as approvedStatus
+                e.locationID,
+                e.contactPhone,
+                e.contactEmail,
+                e.eventType,
+                e.universityID,
+                e.rsoID,
+                e.approvedStatus
               FROM events e 
-              WHERE e.approval_status = 'approved' AND (";
+              WHERE e.approvalStatus = 'approved' AND (";
     
-    // Public events condition
-    $query .= "(e.event_type = 'public') ";
+    $query .= "(e.eventType = 'public') ";
     
-    // Add private events condition if universityID is provided
+
     if ($universityID) {
-        $query .= "OR (e.event_type = 'private' AND e.university_id = ?) ";
+        $query .= "OR (e.eventType = 'private' AND e.universityID = ?) ";
     }
     
-    // Add RSO events condition
-    $query .= "OR (e.event_type = 'rso' AND e.rso_id IN (
-                SELECT rso_id FROM rso_members 
-                WHERE user_id = ?
+    $query .= "OR (e.eventType = 'rso' AND e.rsoID IN (
+                SELECT rsoID FROM rsoMembers 
+                WHERE userID = ?
               ))";
     
-    // Close the WHERE clause
+
     $query .= ")";
     
-    // Prepare and bind parameters
     $stmt = $conn->prepare($query);
     
     if ($universityID) {
@@ -71,9 +66,8 @@ try {
     
     $events = [];
     while ($row = $result->fetch_assoc()) {
-        // Format datetime fields if needed
-        $row['start_time'] = date('H:i:s', strtotime($row['start_time']));
-        $row['end_time'] = date('H:i:s', strtotime($row['end_time']));
+        $row['createdAt'] = date('m/d/Y', strtotime($row['createdAt']));
+        $row['updatedAtt'] = date('m/d/Y', strtotime($row['updatedAtt']));
         $events[] = $row;
     }
     
