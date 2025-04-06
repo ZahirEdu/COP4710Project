@@ -70,8 +70,8 @@ try {
     
     $events = [];
     while ($row = $result->fetch_assoc()) {
-        $row['createdAt'] = date('m/d/Y', strtotime($row['createdAt']));
-        $row['updatedAtt'] = date('m/d/Y', strtotime($row['updatedAtt']));
+        $row['createdAt'] = date('Y-m-d H:i:s', strtotime($row['createdAt']));
+        $row['updatedAtt'] = date('Y-m-d H:i:s', strtotime($row['updatedAtt']));
         $events[] = $row;
     }
     
