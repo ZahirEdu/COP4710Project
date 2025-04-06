@@ -67,7 +67,7 @@ try {
 
     if ($stmt->execute()) {
         $commentID = $conn->insert_id;
-        returnWithInfo("vomment created successfully", $commentID);
+        returnWithInfo("comment created successfully", $commentID);
     } else {
         returnWithError("gailed to create comment: " . $stmt->error);
     }
