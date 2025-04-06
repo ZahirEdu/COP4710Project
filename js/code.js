@@ -51,58 +51,54 @@ let UID = 0;
 let universityID = 0;;
 let name = "";
 let role = "";
-
-function doLogin()
-{
+function doLogin() {
     UID = 0;
-    universityID = 0;;
+    universityID = 0;
     name = "";
     role = "";
 
-    let login = document.getElementById("email").value;
-	let password = document.getElementById("password").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
 
     document.getElementById("loginResult").innerHTML = "";
 
-    let tmp = {email: email,password: password};
-
-    let jsonPayload = JSON.stringify( tmp );
-	
-	let url = urlBase + '/Login.' + extension;
+    let tmp = { email: email, password: password };
+    let jsonPayload = JSON.stringify(tmp);
+    
+    let url = urlBase + '/Login.' + extension;
 
     let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse( xhr.responseText );
-				UID = jsonObject.UID;
-		
-				if( UID < 1 )
-				{		
-					document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
-					return;
-				}
-		
-				universityID = jsonObject.universityID;
-				name = jsonObject.name;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                UID = jsonObject.UID;
+                
+                if (UID < 1) {        
+                    document.getElementById("loginResult").innerHTML = "Email or password is incorrect";
+                    return;
+                }
+                
+                universityID = jsonObject.universityID;
+                name = jsonObject.name;
                 role = jsonObject.role;
 
-				saveCookie();
-	
-				window.location.href = "dashboard.html";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
-	}
+                saveCookie();
+                window.location.href = "dashboard.html";
+            } else {
+                document.getElementById("loginResult").innerHTML = "Login failed. Please try again.";
+            }
+        }
+    };
+    
+    try {
+        xhr.send(jsonPayload);
+    } catch(err) {
+        document.getElementById("loginResult").innerHTML = err.message;
+    }
 }
 
 function doLogout()
