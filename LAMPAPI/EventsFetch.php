@@ -1,86 +1,89 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 header("Content-Type: application/json");
 
-$input = json_decode(file_get_contents('php://input'), true);
-$UID = $input['UID'] ?? null;
-$universityID = $input['universityID'] ?? null;
+// Get raw JSON input from Postman
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
 
-
-if (!$UID) {
+// Check if UID is provided
+if (!isset($data['UID'])) {
     http_response_code(400);
     echo json_encode(["error" => "UID is required"]);
-    exit();
+    exit;
 }
 
-e
-$conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
-if ($conn->connect_error) {
-    http_response_code(500);
-    echo json_encode(["error" => "Database connection failed"]);
-    exit();
+$UID = $data['UID'];
+
+function isSuperAdmin($conn, $UID) {
+    $stmt = $conn->prepare("SELECT role FROM users WHERE UID = ?");
+    $stmt->bind_param("i", $UID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        return $row['role'] === 'superAdmin';
+    }
+    return false;
 }
 
 try {
+    $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
+    if ($conn->connect_error) {
+        throw new Exception("database connection failed");
+    }
+
+    // Check if user is super admin
+    if (!isSuperAdmin($conn, $UID)) {
+        http_response_code(403);
+        throw new Exception("unauthorized");
+    }
+
     $query = "SELECT 
-                e.eventID
+                e.eventID,
                 e.name,
                 e.description,
                 e.catID,
+                c.name as categoryName,
                 e.start_time,
                 e.end_time,
                 e.locationID,
+                l.name as locationName,
                 e.contactPhone,
                 e.contactEmail,
                 e.eventType,
                 e.universityID,
+                u.name as universityName,
                 e.rsoID,
-                e.approvedStatus
-              FROM events e 
-              WHERE e.approvalStatus = 'approved' AND (";
-    
-    $query .= "(e.eventType = 'public') ";
-    
+                r.name as rsoName,
+                e.createdBy,
+                creator.username as creatorUsername,
+                e.approvalStatus,
+                e.approvedBy
+              FROM events e
+              LEFT JOIN eventCat c ON e.catID = c.catID
+              LEFT JOIN locations l ON e.locationID = l.locationID
+              LEFT JOIN universities u ON e.universityID = u.universityID
+              LEFT JOIN rsos r ON e.rsoID = r.rsoID
+              LEFT JOIN users creator ON e.createdBy = creator.UID
+              WHERE e.approvalStatus = 'pending'
+              ORDER BY e.start_time ASC";
 
-    if ($universityID) {
-        $query .= "OR (e.eventType = 'private' AND e.universityID = ?) ";
+    $result = $conn->query($query);
+    
+    if (!$result) {
+        throw new Exception("query failed: " . $conn->error);
     }
-    
-    $query .= "OR (e.eventType = 'rso' AND e.rsoID IN (
-                SELECT rsoID FROM rsoMembers 
-                WHERE userID = ?
-              ))";
-    
 
-    $query .= ")";
-    
-    $stmt = $conn->prepare($query);
-    
-    if ($universityID) {
-        $stmt->bind_param("ii", $universityID, $UID);
-    } else {
-        $stmt->bind_param("i", $UID);
-    }
-    
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $events = [];
+    $pendingEvents = [];
     while ($row = $result->fetch_assoc()) {
-        $row['createdAt'] = date('Y-m-d H:i:s', strtotime($row['createdAt']));
-        $row['updatedAtt'] = date('Y-m-d H:i:s', strtotime($row['updatedAtt']));
-        $events[] = $row;
+        $pendingEvents[] = $row;
     }
-    
-    echo json_encode(["events" => $events]);
-    
+
+    echo json_encode(["pending_events" => $pendingEvents]);
+
 } catch (Exception $e) {
-    http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 } finally {
-    $conn->close();
+    if (isset($conn)) $conn->close();
 }
 ?>
