@@ -87,7 +87,6 @@ function doLogin() {
                 role = jsonObject.role;
 
                 saveCookie();
-                window.location.href = "dashboard.html";
             } else {
                 document.getElementById("loginResult").innerHTML = "Login failed. Please try again.";
             }
