@@ -46,13 +46,11 @@ try {
     $check->close();
 
     
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, name, role, universityID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, name, role, universityID) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssi", 
-        $inData["username"],
+        $inData["name"],
         $inData["email"],
         $inData["password"], 
-        $inData["first_name"],
-        $inData["last_name"],
         $inData["role"],
         $inData["universityID"]
     );
