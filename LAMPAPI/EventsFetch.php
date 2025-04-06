@@ -56,7 +56,7 @@ try {
                 e.rsoID,
                 r.name as rsoName,
                 e.createdBy,
-                creator.username as creatorUsername,
+                creator.name as creatorUsername,
                 e.approvalStatus,
                 e.approvedBy
               FROM events e
