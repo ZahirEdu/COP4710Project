@@ -171,7 +171,7 @@ async function fetchUniversities() {
     const universitySelect = document.getElementById('university');
     
     try {
-        const response = await fetch('UniversitiesFetch.php');
+        const response = await fetch('LAMPAPI/UniversitiesFetch.php');
         const data = await response.json();
         
         if (data.success) {
