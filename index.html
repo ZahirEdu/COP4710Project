@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>UniEvents</title>
     <link rel="stylesheet" href="css/index.css">
     <script type="text/javascript" src="js/code.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">    
@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <div class="form-box login"> 
-            <form action="">
+            <form onsubmit="doLogin(); return false;">
                 <h1>Login</h1>
                 <div class="inputBox">
                     <input type="text" id="email" placeholder="Email" required><i class='bx bxs-envelope' ></i>
@@ -21,7 +21,7 @@
                     <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
                 </div>
    
-                <button type="submit" class="button" onclick="doLogin()">Login</button>
+                <button type="submit" class="button">Login</button>
 
                 <span id="loginResult"></span>
 
@@ -33,7 +33,7 @@
             </form>
         </div>
         <div class="form-box register"> 
-            <form action="">
+            <form onsubmit="doRegister(); return false;">
                 <h1>Create Account</h1>
                 <div class="inputBox">
                     <input type="text" id="name" placeholder="Name" required><i class='bx bxs-user'></i>
@@ -54,7 +54,7 @@
                 </div>
 
                 
-                <button type="submit" class="button" onclick="doRegister()">Create Account</button>
+                <button type="submit" class="button">Create Account</button>
     
 
                 <div class ="formText">
@@ -65,7 +65,7 @@
         </div>
 
         <div class="form-box create"> 
-            <form action="">
+            <form onsubmit="doRegisterUniversity(); return false;">
                 <h1>Create University</h1>
                 <div class="inputBox">
                     <input type="text" id="name" placeholder="Name" required><i class='bx bxs-user'></i>
@@ -83,7 +83,7 @@
                 </div>
 
                 
-                <button type="submit" class="button" onclick="doRegisterUni()">Create Account</button>
+                <button type="submit" class="button">Create Account</button>
     
                 <div class ="formText">
                     <span>Not trying to create a university?</span>
