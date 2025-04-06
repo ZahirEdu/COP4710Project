@@ -71,8 +71,9 @@ try {
         $stmt->close();
 
         //rso events, check membership status and admin
+        //rso events, check membership status and admin
         if ($inData['eventType'] === 'rso') {
-            $stmt = $conn->prepare("SELECT is_admin FROM rsoMembers WHERE rsoID = ? AND UID = ?");
+            $stmt = $conn->prepare("SELECT rsoID FROM rsoMembers WHERE rsoID = ? AND UID = ?");
             $stmt->bind_param("ii", $inData['rsoID'], $inData['UID']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -80,9 +81,17 @@ try {
             if ($result->num_rows === 0) {
                 throw new Exception("not a member of rso");
             }
+            $result->free();
+            $stmt->close();
 
-            $row = $result->fetch_assoc();
-            $isRSOAdmin = (bool)$row['is_admin'];
+            // Check if the user is the admin of the RSO
+            $stmt = $conn->prepare("SELECT adminID FROM rsos WHERE rsoID = ? AND adminID = ?");
+            $stmt->bind_param("ii", $inData['rsoID'], $inData['UID']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $isRSOAdmin = ($result->num_rows > 0);
+            $result->free();
             $stmt->close();
         }
 
