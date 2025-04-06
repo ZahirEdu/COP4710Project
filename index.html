@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" src="js/code.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">    
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -20,7 +21,9 @@
                     <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
                 </div>
    
-                <button type="submit" class="button">Login</button>
+                <button type="submit" class="button" onclick="doLogin()">Login</button>
+
+                <span id="loginResult"></span>
 
                 <div class ="formText">
                     <span>Don't have an account?</span>
@@ -51,7 +54,7 @@
                 </div>
 
                 
-                <button type="submit" class="button">Create Account</button>
+                <button type="submit" class="button" onclick="doRegister()">Create Account</button>
     
 
                 <div class ="formText">
@@ -80,7 +83,7 @@
                 </div>
 
                 
-                <button type="submit" class="button">Create Account</button>
+                <button type="submit" class="button" onclick="doRegisterUni()">Create Account</button>
     
                 <div class ="formText">
                     <span>Not trying to create a university?</span>

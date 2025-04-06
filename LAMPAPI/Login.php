@@ -9,7 +9,7 @@ function getRequestInfo()
 function returnWithInfo($UID, $name, $email, $role, $universityID)
 {
     echo json_encode([
-        'id' => $UID,
+        'UID' => $UID,
         'name' => $name,
         'email' => $email,
         'role' => $role,
