@@ -1,6 +1,8 @@
 <?php
 header("Content-Type: application/json");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 function getRequestInfo()
 {
@@ -22,6 +24,11 @@ function returnWithError($err)
 try {
     $inData = getRequestInfo();
 
+
+    if ($inData === null) {
+        returnWithError("Invalid JSON input");
+    }
+
     $required = ['email', 'password', 'name', 'role', 'universityID'];
     foreach ($required as $field) {
         if (empty($inData[$field])) {
@@ -35,8 +42,14 @@ try {
     }
 
     $check = $conn->prepare("SELECT email FROM users WHERE email = ?");
+    if (!$check) {
+        returnWithError("Prepare failed: " . $conn->error);
+    }
+    
     $check->bind_param("s", $inData["email"]);
-    $check->execute();
+    if (!$check->execute()) {
+        returnWithError("Execute failed: " . $check->error);
+    }
     $check->store_result();
     
     if ($check->num_rows > 0) {
@@ -45,15 +58,22 @@ try {
     }
     $check->close();
 
-    
     $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, universityID) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssi", 
+    if (!$stmt) {
+        returnWithError("Prepare failed: " . $conn->error);
+    }
+    
+    $bindResult = $stmt->bind_param("ssssi", 
         $inData["name"],
         $inData["email"],
         $inData["password"], 
         $inData["role"],
         $inData["universityID"]
     );
+    
+    if (!$bindResult) {
+        returnWithError("Bind failed: " . $stmt->error);
+    }
 
     if ($stmt->execute()) {
         returnWithInfo("User created successfully");
