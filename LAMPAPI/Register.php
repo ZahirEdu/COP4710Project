@@ -46,7 +46,7 @@ try {
     $check->close();
 
     
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password, name, role, universityID) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, role, universityID) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssi", 
         $inData["name"],
         $inData["email"],
