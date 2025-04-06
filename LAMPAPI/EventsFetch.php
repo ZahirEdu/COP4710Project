@@ -1,44 +1,29 @@
 <?php
 header("Content-Type: application/json");
 
-// Get raw JSON input from Postman
-$json = file_get_contents('php://input');
-$data = json_decode($json, true);
-
-// Check if UID is provided
-if (!isset($data['UID'])) {
-    http_response_code(400);
-    echo json_encode(["error" => "UID is required"]);
-    exit;
-}
-
-$UID = $data['UID'];
-
-function isSuperAdmin($conn, $UID) {
-    $stmt = $conn->prepare("SELECT role FROM users WHERE UID = ?");
-    $stmt->bind_param("i", $UID);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($row = $result->fetch_assoc()) {
-        return $row['role'] === 'superadmin';
-    }
-    return false;
-}
+// Database connection details
+$db_host = "localhost";
+$db_user = "Zahir";
+$db_pass = "k9m2q5i0";
+$db_name = "UniversityEventManagement";
 
 try {
-    $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
     if ($conn->connect_error) {
-        throw new Exception("database connection failed");
+        throw new Exception("Database connection failed: " . $conn->connect_error);
     }
 
-    // Check if user is super admin
-    if (!isSuperAdmin($conn, $UID)) {
-        http_response_code(403);
-        throw new Exception("unauthorized");
+    // Get the UID from the GET request (assuming frontend sends it this way)
+    $UID = $_GET['UID'] ?? null;
+    $universityID = $_GET['universityID'] ?? null; // Optional for private events
+
+    if (!$UID) {
+        http_response_code(400);
+        echo json_encode(["error" => "UID parameter is required in the URL"]);
+        exit();
     }
 
-    $query = "SELECT 
+    $query = "SELECT
                 e.eventID,
                 e.name,
                 e.description,
@@ -56,32 +41,57 @@ try {
                 e.rsoID,
                 r.name as rsoName,
                 e.createdBy,
-                creator.name as creatorUsername,
-                e.approvalStatus,
-                e.approvedBy
+                creator.username as creatorUsername,
+                e.approvalStatus
               FROM events e
               LEFT JOIN eventCat c ON e.catID = c.catID
               LEFT JOIN locations l ON e.locationID = l.locationID
               LEFT JOIN universities u ON e.universityID = u.universityID
               LEFT JOIN rsos r ON e.rsoID = r.rsoID
               LEFT JOIN users creator ON e.createdBy = creator.UID
-              WHERE e.approvalStatus = 'pending'
+              WHERE e.approvalStatus = 'approved'
+              AND (
+                  e.eventType = 'public' OR
+                  (e.eventType = 'private' AND e.universityID = ?) OR
+                  (e.eventType = 'rso' AND e.rsoID IN (
+                      SELECT rsoID
+                      FROM rsoMembers
+                      WHERE UID = ?
+                  ))
+              )
               ORDER BY e.start_time ASC";
 
-    $result = $conn->query($query);
-    
+    $stmt = $conn->prepare($query);
+
+    if (!$stmt) {
+        throw new Exception("Error preparing query: " . $conn->error);
+    }
+
+    if ($universityID) {
+        $stmt->bind_param("ii", $universityID, $UID);
+    } else {
+        // If no universityID is provided, we still need to bind the UID for the RSO check.
+        // To handle the 'private' condition when universityID is null, we can use a placeholder
+        // that will never match, effectively skipping that OR condition.
+        $stmt->bind_param("ii", -1, $UID); // Assuming -1 is not a valid universityID
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if (!$result) {
-        throw new Exception("query failed: " . $conn->error);
+        throw new Exception("Error executing query: " . $stmt->error);
     }
 
-    $pendingEvents = [];
+    $approvedEvents = [];
     while ($row = $result->fetch_assoc()) {
-        $pendingEvents[] = $row;
+        $approvedEvents[] = $row;
     }
 
-    echo json_encode(["pending_events" => $pendingEvents]);
+    echo json_encode(["approved_events" => $approvedEvents]);
 
 } catch (Exception $e) {
+    http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 } finally {
     if (isset($conn)) $conn->close();

@@ -1,9 +1,18 @@
 <?php
 header("Content-Type: application/json");
 
-session_start();
-$UID = $_SESSION['UID'] ?? null; 
+// Get raw JSON input from Postman
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
 
+// Check if UID is provided
+if (!isset($data['UID'])) {
+    http_response_code(400);
+    echo json_encode(["error" => "UID is required"]);
+    exit;
+}
+
+$UID = $data['UID'];
 
 function isSuperAdmin($conn, $UID) {
     $stmt = $conn->prepare("SELECT role FROM users WHERE UID = ?");
@@ -12,20 +21,19 @@ function isSuperAdmin($conn, $UID) {
     $result = $stmt->get_result();
     
     if ($row = $result->fetch_assoc()) {
-        return $row['role'] === 'superAdmin';
+        return $row['role'] === 'superadmin';
     }
     return false;
 }
 
 try {
-
-    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
     if ($conn->connect_error) {
         throw new Exception("database connection failed");
     }
 
-    //check if user is super admin
-    if (!$UID || !isSuperAdmin($conn, $UID)) {
+    // Check if user is super admin
+    if (!isSuperAdmin($conn, $UID)) {
         http_response_code(403);
         throw new Exception("unauthorized");
     }
@@ -48,7 +56,7 @@ try {
                 e.rsoID,
                 r.name as rsoName,
                 e.createdBy,
-                creator.username as creatorUsername,
+                creator.name as creatorUsername,
                 e.approvalStatus,
                 e.approvedBy
               FROM events e
@@ -68,14 +76,10 @@ try {
 
     $pendingEvents = [];
     while ($row = $result->fetch_assoc()) {
-
-        $row['createdAt'] = date('m/d/Y', strtotime($row['createdAt']));
-        $row['updatedAtt'] = date('m/d/Y', strtotime($row['updatedAtt']));
-        
         $pendingEvents[] = $row;
     }
 
-    echo json_encode(["pending events" => $pendingEvents]);
+    echo json_encode(["pending_events" => $pendingEvents]);
 
 } catch (Exception $e) {
     echo json_encode(["error" => $e->getMessage()]);
