@@ -36,7 +36,7 @@ try {
     }
 
     //checking to see if event is exsits and is is approved, redundant
-    $stmt = $conn->prepare("SELECT eventID FROM events WHERE eventID = ? AND approval_status = 'approved'");
+    $stmt = $conn->prepare("SELECT eventID FROM events WHERE eventID = ? AND approvalStatus = 'approved'");
     $stmt->bind_param("i", $inData["eventID"]);
     $stmt->execute();
     $result = $stmt->get_result();
