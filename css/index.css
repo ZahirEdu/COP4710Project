@@ -112,6 +112,11 @@ form h1 {
     font-size: 20px;
     color:#14213d;
 }
+
+#loginResult {
+    color:red;
+    font-weight: 600;
+}
 .selectBox {
     text-align: left;
 }
