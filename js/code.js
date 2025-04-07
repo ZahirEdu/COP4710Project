@@ -55,13 +55,14 @@ let name = "";
 let role = "";
 let email = "";
 
+
 function doLogin() {
     UID = 0;
     universityID = 0;
     name = "";
     role = "";
 
-    let email = document.getElementById("email").value;
+    email = document.getElementById("email").value; 
     let password = document.getElementById("password").value;
 
     document.getElementById("loginResult").innerHTML = "";
