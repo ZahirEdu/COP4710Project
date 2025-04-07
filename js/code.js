@@ -384,10 +384,19 @@ function displayEvents(events) {
             eventCard.classList.add('card');
             eventCard.innerHTML = `
                 <div class="card-info">
-                    <span>${event.name}</span>
-                    <span>${event.description}</span>
-                    <span>Location: ${event.locationName}</span>
-                    <span>Time: ${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}</span>
+                    <div class="card-title">
+                        <span>${event.name}</span>
+                    </div>
+                    <div class="card-location">
+                        <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">${event.locationName}</span>
+                    </div>
+                    <div class="card-time">
+                        <span style="font-weight: 600;">Time: </span> 
+                        <span style="font-weight: 500;">${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}</span>
+                    </div>
+                    <div class="card-desc">
+                        <span>${event.description}</span>
+                    </div>
                     ${event.rsoName ? `<span>RSO: ${event.rsoName}</span>` : ''}
                     <span>Category: ${event.categoryName}</span>
                     <span>Contact: ${event.contactEmail || event.contactPhone || 'N/A'}</span>

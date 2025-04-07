@@ -85,6 +85,7 @@ body {
     cursor: pointer;
     padding: 5px;
     transition: background-color 0.3s ease, transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+    overflow: hidden;
 }
 
 .card:hover{
@@ -95,4 +96,20 @@ body {
 .card:active {
     transform: translateY(5px);
     box-shadow: 0px 5px 10px rgba(0,0,0,0.3);
+}
+
+.card-title{
+    width: 100%;
+    font-size: 25px;
+    font-weight: 600;
+    border-bottom: 2px solid #14213d;
+}
+
+.card-location, .card-time{
+    font-size: 18px;
+}
+
+.card-desc {
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
