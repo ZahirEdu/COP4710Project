@@ -266,3 +266,70 @@ function doRegister() {
     }
 }
 
+function doRegisterUniversity() {
+    let name = document.getElementById("Dname").value; // Assuming you have a name field for the admin creating the university
+    let email = document.getElementById("Demail").value; // Assuming you have an email field for the admin
+    let password = document.getElementById("Dpassword").value; // Assuming you have a password field for the admin
+    let uniName = document.getElementById("university").value;
+    let description = document.getElementById("description").value;
+    let studentCount = document.getElementById("studentCount").value;
+
+    document.getElementById("universityResult").innerHTML = ""; // Assuming you have a span with this ID for feedback
+
+    // Basic validation (you might want more robust validation)
+    if (!name || !email || !password || !uniName || !description || !studentCount) {
+        document.getElementById("universityResult").innerHTML = "Please fill in all fields.";
+        return;
+    }
+
+    if (isNaN(studentCount)) {
+        document.getElementById("universityResult").innerHTML = "Student Count must be a number.";
+        return;
+    }
+
+    let tmp = {
+        name: name,
+        email: email,
+        password: password,
+        uniName: uniName,
+        description: description,
+        studentCount: parseInt(studentCount) // Ensure studentCount is an integer
+    };
+
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/UniversityCreate.' + extension; // Assuming urlBase and extension are defined
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+
+                if (jsonObject.error) {
+                    document.getElementById("universityResult").innerHTML = jsonObject.error;
+                } else if (jsonObject.message === "University created successfully") {
+                    document.getElementById("universityResult").innerHTML = "University created successfully!";
+                    // Optionally, redirect or clear the form
+                    // document.getElementById("universityRegistrationForm").reset();
+                } else {
+                    document.getElementById("universityResult").innerHTML = "University creation failed.";
+                    console.error("University creation error:", jsonObject); // Log unexpected responses
+                }
+            } else {
+                document.getElementById("universityResult").innerHTML = "University creation failed due to network error.";
+                console.error("University creation request failed:", this.status);
+            }
+        }
+    };
+
+    try {
+        xhr.send(jsonPayload);
+    } catch (err) {
+        document.getElementById("universityResult").innerHTML = "An error occurred during university creation.";
+        console.error("Error sending university creation request:", err.message);
+    }
+}
