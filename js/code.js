@@ -120,16 +120,15 @@ function doLogout()
 
 function saveCookie()
 {
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "name=" + name + 
-    ",email=" + email + 
-    ",UID=" + UID + 
-    ",universityID=" + 
-    universityID + ",role=" + 
-    role + ";expires=" + 
-    date.toGMTString();
+    let minutes = 20;
+    let date = new Date();
+    date.setTime(date.getTime()+(minutes*60*1000));
+
+    document.cookie = "name=" + name + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = document.cookie + "; email=" + email + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = document.cookie + "; UID=" + UID + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = document.cookie + "; universityID=" + universityID + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = document.cookie + "; role=" + role + "; expires=" + date.toGMTString() + "; path=/";
 }
 
 function readCookie()
