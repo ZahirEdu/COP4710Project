@@ -225,6 +225,12 @@ function doRegister() {
 
     document.getElementById("registrationResult").innerHTML = ""; // Assuming you have a span with this ID for feedback
 
+    console.log("Email value:", email);
+    console.log("Password value:", password);
+    console.log("Name value:", name);
+    console.log("University ID value:", universityID);
+
+
     let tmp = { email: email, password: password, name: name, role: role, universityID: universityID };
     let jsonPayload = JSON.stringify(tmp);
 
