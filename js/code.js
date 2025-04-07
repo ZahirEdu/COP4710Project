@@ -162,14 +162,15 @@ function readCookie() {
     });
 }
 
-function doLogout()
-{
-	UID = 0;
-    universityID = 0;
-	name = "";
-	role = "";
-	document.cookie = "name= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
+function doLogout() {
+    // Clear the cookies by setting their expiration date to the past
+    document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    document.cookie = "UID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    document.cookie = "universityID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+    document.cookie = "role=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+
+    window.location.href = "index.html";
 }
 
 
@@ -334,3 +335,85 @@ function doRegisterUniversity() {
         console.error("Error sending university creation request:", err.message);
     }
 }
+
+async function fetchEvents() {;
+    const UID = UIDFromCookie
+    const universityID = universityIDFromCookie
+
+    if (!UID) {
+        console.error("User ID (UID) not found in cookie. Cannot fetch events.");
+        return null;
+    }
+
+    try {
+        const url = urlBase + '/EventsFetch.' + extension; // The URL of your PHP script
+
+        const requestOptions = {
+            method: 'POST', // Your PHP script expects a POST request
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ UID: UID, universityID: universityID }) // Send UID and universityID in the request body as JSON
+        };
+
+        const response = await fetch(url, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data; // The JSON data fetched from EventsFetch.php
+    } catch (error) {
+        console.error("Error fetching events:", error);
+        return null; // Or handle the error as needed in your application
+    }
+}
+
+// Example of how to use the fetchEvents function:
+async function loadAndDisplayEvents() {
+    const eventsData = await fetchEvents();
+    if (eventsData && eventsData.approved_events) {
+        console.log("Fetched events:", eventsData.approved_events);
+        // Now you can process and display the eventsData in your HTML
+        displayEvents(eventsData.approved_events);
+    } else {
+        console.log("Failed to load events.");
+        // Handle the case where fetching events failed
+    }
+}
+
+// Assuming you have a function to display the events in your HTML
+function displayEvents(events) {
+    const dashboardContainer = document.getElementById('dashboard-container');
+    if (dashboardContainer) {
+        dashboardContainer.innerHTML = ''; // Clear existing content
+        events.forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.classList.add('dashboard-card');
+            eventCard.innerHTML = `
+                <div class="card-info">
+                    <span>${event.name}</span>
+                    <span>${event.description}</span>
+                    <span>Location: ${event.locationName}</span>
+                    <span>Time: ${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}</span>
+                    ${event.rsoName ? `<span>RSO: ${event.rsoName}</span>` : ''}
+                    <span>Category: ${event.categoryName}</span>
+                    <span>Contact: ${event.contactEmail || event.contactPhone || 'N/A'}</span>
+                    <span>Created By: ${event.creatorUsername}</span>
+                    <span>Status: ${event.approvalStatus}</span>
+                </div>
+            `;
+            dashboardContainer.appendChild(eventCard);
+        });
+    }
+}
+
+// Helper function to format datetime (you might want a more robust one)
+function formatDateTime(dateTimeString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateTimeString).toLocaleDateString(undefined, options);
+}
+
+// Call loadAndDisplayEvents when the page loads (or at the appropriate time)
+document.addEventListener('DOMContentLoaded', loadAndDisplayEvents);
