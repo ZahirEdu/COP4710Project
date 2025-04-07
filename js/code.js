@@ -151,15 +151,6 @@ function readCookie() {
     UIDFromCookie = parseInt(userData.UID); // Convert to number
     universityIDFromCookie = parseInt(userData.universityID); // Convert to number
     roleFromCookie = userData.role;
-
-    // Optional: Log the retrieved values for verification
-    console.log("Cookie Data:", {
-        name: nameFromCookie,
-        email: emailFromCookie,
-        UID: UIDFromCookie,
-        universityID: universityIDFromCookie,
-        role: roleFromCookie
-    });
 }
 
 function doLogout() {
@@ -376,6 +367,7 @@ async function loadAndDisplayEvents() {
     if (eventsData && eventsData.approved_events) {
         console.log("Fetched events:", eventsData.approved_events);
         // Now you can process and display the eventsData in your HTML
+        console.log("printing events");
         displayEvents(eventsData.approved_events);
     } else {
         console.log("Failed to load events.");
@@ -383,14 +375,13 @@ async function loadAndDisplayEvents() {
     }
 }
 
-// Assuming you have a function to display the events in your HTML
 function displayEvents(events) {
     const dashboardContainer = document.getElementById('dashboard-container');
     if (dashboardContainer) {
         dashboardContainer.innerHTML = ''; // Clear existing content
         events.forEach(event => {
             const eventCard = document.createElement('div');
-            eventCard.classList.add('dashboard-card');
+            eventCard.classList.add('card');
             eventCard.innerHTML = `
                 <div class="card-info">
                     <span>${event.name}</span>
