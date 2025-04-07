@@ -94,6 +94,12 @@ function doLogin() {
                 name = jsonObject.name;
                 role = jsonObject.role;
     
+                console.log("Values before saveCookie:", {
+                    email: email,
+                    UID: UID,
+                    universityID: universityID,
+                    role: role
+                });
                 saveCookie();
                 document.getElementById("loginResult").innerHTML = "Login successful!";
                 window.location.href = "dashboard.html";
