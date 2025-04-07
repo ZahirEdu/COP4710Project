@@ -397,6 +397,16 @@ function displayEvents(events) {
                     <div class="card-desc">
                         <span>${event.description}</span>
                     </div>
+
+                    <div class="card-details">
+                        <div class="card-cat">
+                        </div>
+                        <div class="card-contact-email">
+                        </div>
+                        <div class="card-contact-phone">
+                        </div>
+                    </div>
+
                 </div>
             `;
             dashboardContainer.appendChild(eventCard);

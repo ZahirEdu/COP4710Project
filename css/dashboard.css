@@ -69,6 +69,7 @@ body {
     flex-wrap: wrap;
     gap: 25px;
     height: calc(100vh - 200px);
+    overflow-y: auto;
 
 
 }
@@ -99,10 +100,13 @@ body {
 }
 
 .card-title{
+    background-color: #dadada;
     width: 100%;
     font-size: 25px;
     font-weight: 600;
     border-bottom: 2px solid #14213d;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
 }
 
 .card-location, .card-time{
