@@ -1,6 +1,8 @@
 const urlBase = 'https://zahirgutierrez.com/LAMPAPI'
 const extension = 'php';
 
+document.addEventListener('DOMContentLoaded', readCookie);
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.querySelector('.form-box.login');
     const registerForm = document.querySelector('.form-box.register');
@@ -131,46 +133,41 @@ function saveCookie()
     document.cookie = document.cookie + "; role=" + role + "; expires=" + date.toGMTString() + "; path=/";
 }
 
-function readCookie()
-{
-	UID = -1;
-	let data = document.cookie;
-	let splits = data.substring(data.indexOf(';') + 1).split(",");
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
-		if( tokens[0] == "name" )
-		{
-			name = tokens[1];
-		}
-		else if( tokens[0] == "email" )
-		{
-			email = tokens[1];
-		}
-        else if( tokens[0] == "role" )
-        {
-                role = tokens[1];
-        }  
-		else if( tokens[0] == "UID" )
-		{
-			UID = parseInt( tokens[1].trim() );
-		}
-        else if( tokens[0] == "universityID" )
-        {
-            universityID = parseInt( tokens[1].trim() );
+let nameFromCookie;
+let emailFromCookie;
+let UIDFromCookie;
+let universityIDFromCookie;
+let roleFromCookie;
+
+function readCookie() {
+    const cookies = document.cookie.split(';');
+    const userData = {};
+
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.includes('=')) {
+            let [name, value] = cookie.split('=');
+            userData[name] = value;
         }
-	}
-	
-	if( UID < 0 )
-	{
-		window.location.href = "index.html";
-	}
-	else
-	{
-		console.log("name: ", name, "UID: ", UID,"email: ", email,"role: ", role, "universityID: ", universityID);
-	}
+    }
+
+    // Assign cookie values to the global variables
+    nameFromCookie = userData.name;
+    emailFromCookie = userData.email;
+    UIDFromCookie = parseInt(userData.UID); // Convert to number
+    universityIDFromCookie = parseInt(userData.universityID); // Convert to number
+    roleFromCookie = userData.role;
+
+    // Optional: Log the retrieved values for verification
+    console.log("Cookie Data:", {
+        name: nameFromCookie,
+        email: emailFromCookie,
+        UID: UIDFromCookie,
+        universityID: universityIDFromCookie,
+        role: roleFromCookie
+    });
 }
+
 
 
 async function fetchUniversities() {
