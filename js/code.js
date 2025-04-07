@@ -397,17 +397,20 @@ function displayEvents(events) {
                     <div class="card-desc">
                         <span>${event.description}</span>
                     </div>
-                    ${event.rsoName ? `<span>RSO: ${event.rsoName}</span>` : ''}
-                    <span>Category: ${event.categoryName}</span>
-                    <span>Contact: ${event.contactEmail || event.contactPhone || 'N/A'}</span>
-                    <span>Created By: ${event.creatorUsername}</span>
-                    <span>Status: ${event.approvalStatus}</span>
                 </div>
             `;
             dashboardContainer.appendChild(eventCard);
         });
     }
 }
+
+/*
+${event.rsoName ? `<span>RSO: ${event.rsoName}</span>` : ''}
+                    <span>Category: ${event.categoryName}</span>
+                    <span>Contact: ${event.contactEmail || event.contactPhone || 'N/A'}</span>
+                    <span>Created By: ${event.creatorUsername}</span>
+                    <span>Status: ${event.approvalStatus}</span>
+*/ 
 
 // Helper function to format datetime (you might want a more robust one)
 function formatDateTime(dateTimeString) {
