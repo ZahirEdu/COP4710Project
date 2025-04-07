@@ -53,6 +53,7 @@ let UID = 0;
 let universityID = 0;;
 let name = "";
 let role = "";
+
 function doLogin() {
     UID = 0;
     universityID = 0;
@@ -93,16 +94,10 @@ function doLogin() {
                 universityID = jsonObject.universityID;
                 name = jsonObject.name;
                 role = jsonObject.role;
-    
-                console.log("Values before saveCookie:", {
-                    email: email,
-                    UID: UID,
-                    universityID: universityID,
-                    role: role
-                });
+
                 saveCookie();
                 document.getElementById("loginResult").innerHTML = "Login successful!";
-                //window.location.href = "dashboard.html";
+                window.location.href = "dashboard.html";
             } else {
                 document.getElementById("loginResult").innerHTML = "Login failed. Please check your connection.";
             }
