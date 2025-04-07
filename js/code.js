@@ -216,10 +216,10 @@ async function fetchUniversities() {
 }
 
 function doRegister() {
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
-    let name = document.getElementById("name").value;
-    let universitySelect = document.getElementById("university");
+    let email = document.getElementById("Remail").value;
+    let password = document.getElementById("Rpassword").value;
+    let name = document.getElementById("Rname").value;
+    let universitySelect = document.getElementById("Runiversity");
     let universityID = universitySelect.value;
     let role = 'student'; // Automatically set role to 'student'
 
