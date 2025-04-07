@@ -142,11 +142,10 @@ function readCookie() {
         let cookie = cookies[i].trim();
         if (cookie.includes('=')) {
             let [name, value] = cookie.split('=');
-            userData[name] = value;
+            userData[name] = decodeURIComponent(value); // Decode here
         }
     }
 
-    // Assign cookie values to the global variables
     nameFromCookie = userData.name;
     emailFromCookie = userData.email;
     UIDFromCookie = parseInt(userData.UID); // Convert to number
