@@ -102,7 +102,7 @@ function doLogin() {
                 });
                 saveCookie();
                 document.getElementById("loginResult").innerHTML = "Login successful!";
-                window.location.href = "dashboard.html";
+                //window.location.href = "dashboard.html";
             } else {
                 document.getElementById("loginResult").innerHTML = "Login failed. Please check your connection.";
             }
