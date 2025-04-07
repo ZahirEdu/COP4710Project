@@ -50,9 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 let UID = 0;
-let universityID = 0;;
+let universityID = 0;
 let name = "";
 let role = "";
+let email = "";
 
 function doLogin() {
     UID = 0;
@@ -111,27 +112,19 @@ function doLogin() {
     }
 }
 
-function doLogout()
-{
-	UID = 0;
-    universityID = 0;
-	name = "";
-	role = "";
-	document.cookie = "name= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
-}
 
 function saveCookie()
 {
     let minutes = 20;
     let date = new Date();
     date.setTime(date.getTime()+(minutes*60*1000));
-
-    document.cookie = "name=" + name + "; expires=" + date.toGMTString() + "; path=/";
-    document.cookie = document.cookie + "; email=" + email + "; expires=" + date.toGMTString() + "; path=/";
-    document.cookie = document.cookie + "; UID=" + UID + "; expires=" + date.toGMTString() + "; path=/";
-    document.cookie = document.cookie + "; universityID=" + universityID + "; expires=" + date.toGMTString() + "; path=/";
-    document.cookie = document.cookie + "; role=" + role + "; expires=" + date.toGMTString() + "; path=/";
+    
+    // Set each cookie separately
+    document.cookie = "name=" + encodeURIComponent(name) + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = "email=" + encodeURIComponent(email) + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = "UID=" + UID + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = "universityID=" + universityID + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = "role=" + encodeURIComponent(role) + "; expires=" + date.toGMTString() + "; path=/";
 }
 
 let nameFromCookie;
@@ -169,6 +162,15 @@ function readCookie() {
     });
 }
 
+function doLogout()
+{
+	UID = 0;
+    universityID = 0;
+	name = "";
+	role = "";
+	document.cookie = "name= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+	window.location.href = "index.html";
+}
 
 
 async function fetchUniversities() {
