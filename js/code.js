@@ -174,7 +174,7 @@ function readCookie()
 
 
 async function fetchUniversities() {
-    const universitySelect = document.getElementById('university');
+    const universitySelect = document.getElementById('Runiversity');
     const url = urlBase + '/UniversitiesFetch.' + extension; // Corrected URL
 
     let xhr = new XMLHttpRequest();
