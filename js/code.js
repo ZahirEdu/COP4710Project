@@ -242,11 +242,11 @@ function doRegister() {
                 if (jsonObject.error) {
                     document.getElementById("registrationResult").innerHTML = jsonObject.error;
                 } else if (jsonObject.message === "User created successfully") {
-                    document.getElementById("registrationResult").innerHTML = "Registration successful! You can now log in.";
-                    // Optionally, redirect to the login page after a short delay
-                    // setTimeout(function() {
-                    //     window.location.href = "login.html";
-                    // }, 2000);
+                    document.getElementById("registrationResult").innerHTML = "Registration successful! Redirecting to login...";
+                    
+                    setTimeout(function() {
+                        window.location.reload(); // Or window.location.href = "your_login_page.html";
+                    }, 3000);
                 } else {
                     document.getElementById("registrationResult").innerHTML = "Registration failed. Please try again.";
                     console.error("Registration error:", jsonObject); // Log unexpected responses
@@ -311,10 +311,11 @@ function doRegisterUniversity() {
 
                 if (jsonObject.error) {
                     document.getElementById("universityResult").innerHTML = jsonObject.error;
-                } else if (jsonObject.message === "University created successfully") {
-                    document.getElementById("universityResult").innerHTML = "University created successfully!";
-                    // Optionally, redirect or clear the form
-                    // document.getElementById("universityRegistrationForm").reset();
+                } else if (jsonObject.message === "University and super admin created successfully") {
+                    document.getElementById("universityResult").innerHTML = "University created successfully! Redirecting to login...";
+                    setTimeout(function() {
+                        window.location.reload(); // Or window.location.href = "your_login_page.html";
+                    }, 3000);
                 } else {
                     document.getElementById("universityResult").innerHTML = "University creation failed.";
                     console.error("University creation error:", jsonObject); // Log unexpected responses
