@@ -113,7 +113,7 @@ form h1 {
     color:#14213d;
 }
 
-#loginResult {
+#loginResult, #registrationResult {
     color:red;
     font-weight: 600;
 }

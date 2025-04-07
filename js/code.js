@@ -215,3 +215,54 @@ async function fetchUniversities() {
     }
 }
 
+function doRegister() {
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let name = document.getElementById("name").value;
+    let universitySelect = document.getElementById("university");
+    let universityID = universitySelect.value;
+    let role = 'student'; // Automatically set role to 'student'
+
+    document.getElementById("registrationResult").innerHTML = ""; // Assuming you have a span with this ID for feedback
+
+    let tmp = { email: email, password: password, name: name, role: role, universityID: universityID };
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/Register.' + extension; // Assuming urlBase and extension are defined
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+
+                if (jsonObject.error) {
+                    document.getElementById("registrationResult").innerHTML = jsonObject.error;
+                } else if (jsonObject.message === "User created successfully") {
+                    document.getElementById("registrationResult").innerHTML = "Registration successful! You can now log in.";
+                    // Optionally, redirect to the login page after a short delay
+                    // setTimeout(function() {
+                    //     window.location.href = "login.html";
+                    // }, 2000);
+                } else {
+                    document.getElementById("registrationResult").innerHTML = "Registration failed. Please try again.";
+                    console.error("Registration error:", jsonObject); // Log unexpected responses
+                }
+            } else {
+                document.getElementById("registrationResult").innerHTML = "Registration failed due to network error.";
+                console.error("Registration request failed:", this.status);
+            }
+        }
+    };
+
+    try {
+        xhr.send(jsonPayload);
+    } catch (err) {
+        document.getElementById("registrationResult").innerHTML = "An error occurred during registration.";
+        console.error("Error sending registration request:", err.message);
+    }
+}
+
