@@ -70,21 +70,28 @@
             <form onsubmit="doRegisterUniversity(); return false;">
                 <h1>Create University</h1>
                 <div class="inputBox">
-                    <input type="text" id="name" placeholder="Name" required><i class='bx bxs-user'></i>
+                    <input type="text" id="Dname" placeholder="Name" required><i class='bx bxs-user'></i>
                  </div>
 
                 <div class="inputBox">
-                    <input type="text" id="email" placeholder="Email" required><i class='bx bxs-envelope' ></i>
+                    <input type="text" id="Demail" placeholder="Email" required><i class='bx bxs-envelope' ></i>
                  </div>
                  <div class="inputBox">
-                    <input type="password" id="password" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
+                    <input type="password" id="Dpassword" placeholder="Password" required><i class='bx bxs-lock-alt' ></i>
                 </div>
 
                 <div class="inputBox">
                     <input type="text" id="university" placeholder="University" required><i class='bx bxs-graduation'></i>
                 </div>
+                <div class="inputBox">
+                    <input type="text" id="description" placeholder="Description" required><i class='bx bxs-graduation'></i>
+                </div>
+                <div class="inputBox">
+                    <input type="number" id="studentCount" placeholder="University" required><i class='bx bxs-graduation'></i>
+                </div>
 
-                
+                <span id="universityResult"></span>
+
                 <button type="submit" class="button">Create Account</button>
     
                 <div class ="formText">
