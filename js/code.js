@@ -75,21 +75,28 @@ function doLogin() {
         if (this.readyState == 4) {
             if (this.status == 200) {
                 let jsonObject = JSON.parse(xhr.responseText);
-                UID = jsonObject.UID;
-                
-                if (UID < 1) {        
-                    document.getElementById("loginResult").innerHTML = "Email or password is incorrect";
+    
+                if (jsonObject.error) {
+                    document.getElementById("loginResult").innerHTML = jsonObject.error; // Display the error message from the server
                     return;
                 }
-                
+    
+                UID = jsonObject.UID;
+    
+                if (UID < 1) {
+                    document.getElementById("loginResult").innerHTML = "Login failed. Please try again."; // Fallback for unexpected UID
+                    return;
+                }
+    
                 universityID = jsonObject.universityID;
                 name = jsonObject.name;
                 role = jsonObject.role;
-
+    
                 saveCookie();
                 document.getElementById("loginResult").innerHTML = "Login successful!";
+                // window.location.href = "dashboard.html";
             } else {
-                document.getElementById("loginResult").innerHTML = "Login failed. Please try again.";
+                document.getElementById("loginResult").innerHTML = "Login failed. Please check your connection.";
             }
         }
     };
