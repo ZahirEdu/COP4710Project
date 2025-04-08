@@ -456,7 +456,7 @@ async function showEventPopup(event) {
 
     const ratingsResult = await fetchAndCalculateAverageRating(event.eventID);
 
-    const ratingElement = document.querySelector('.event-ratig span:first-child');
+    const ratingElement = document.getElementById('avg-rating');
     if (ratingElement) {
         ratingElement.textContent = ratingsResult.average;
     }
@@ -500,7 +500,7 @@ async function showEventPopup(event) {
     
     addCommentBtn.addEventListener('click', async () => {
         const commentText = commentInput.value.trim();
-        const UID = getCurrentUserID(); // Implement this based on your auth system
+        const UID = UIDFromCookie;
         
         if (!commentText) {
             alert('Please enter a comment');
@@ -538,6 +538,15 @@ async function showEventPopup(event) {
             popup.style.display = 'none';
         }
     });
+}
+
+
+
+function updateRatingDisplay(ratingsResult) {
+    const ratingElement = document.getElementById('avg-rating');    
+    if (ratingElement) {
+        ratingElement.textContent = ratingsResult.average;
+    }
 }
 
 function displayComments(comments, container) {
