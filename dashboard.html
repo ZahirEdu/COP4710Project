@@ -38,6 +38,12 @@
             </li>
             <li class="menu-item">
                 <a= href="#" onclick="" class="menu-item-a">
+                    <i class='bx bx-message-alt-edit' ></i>
+                    <div class="menu-item-text"> Edit Comment </div>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a= href="#" onclick="" class="menu-item-a">
                     <i class='bx bx-calendar-exclamation' ></i>
                     <div class="menu-item-text">Pending Events </div>
                 </a>
@@ -81,10 +87,19 @@
                             <div class="card-title">
                                 <span>event name</span>
                             </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
+                            <div class="card-content">
+                                <div class="card-location">
+                                    <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
                                 </div>
-                                <div class="card-contact-phone">
+                                <div class="card-time">
+                                    <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
+                                </div>
+                                <div class="card-desc">
+                                    <span>Fancy 이건 참 화려해
+                                        It's glowing and it's flashy (yeah)
+                                        알아, 적당함이 뭔지 keep it classy
+                                        따라 하지 넌 또 하나부터 열까지 (yeah)
+                                        아닌척하지 (yeah)</span>
                                 </div>
                             </div>
                         </div>
@@ -149,8 +164,132 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card" id="card">
+                        <div class="card-info">
+                            <div class="card-title">
+                                <span>event name</span>
+                            </div>
+                            <div class="card-location">
+                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-time">
+                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-desc">
+                                <span>Fancy 이건 참 화려해
+                                    It's glowing and it's flashy (yeah)
+                                    알아, 적당함이 뭔지 keep it classy
+                                    따라 하지 넌 또 하나부터 열까지 (yeah)
+                                    아닌척하지 (yeah)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="card">
+                        <div class="card-info">
+                            <div class="card-title">
+                                <span>event name</span>
+                            </div>
+                            <div class="card-location">
+                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-time">
+                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-desc">
+                                <span>Fancy 이건 참 화려해
+                                    It's glowing and it's flashy (yeah)
+                                    알아, 적당함이 뭔지 keep it classy
+                                    따라 하지 넌 또 하나부터 열까지 (yeah)
+                                    아닌척하지 (yeah)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="card">
+                        <div class="card-info">
+                            <div class="card-title">
+                                <span>event name</span>
+                            </div>
+                            <div class="card-location">
+                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-time">
+                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
+                            </div>
+                            <div class="card-desc">
+                                <span>Fancy 이건 참 화려해
+                                    It's glowing and it's flashy (yeah)
+                                    알아, 적당함이 뭔지 keep it classy
+                                    따라 하지 넌 또 하나부터 열까지 (yeah)
+                                    아닌척하지 (yeah)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                
                 </div>
             </div>
         </div>
+        <!--EVENT POPUP-->
+        <div class="event-popup" id="eventPopUp">
+            <div class="event-popup-header" id="event-popup-header">
+                <h1>Event Name</h1>
+                <button id="close-popup" onclick=""><i class='bx bx-window-close'></i></button>
+            </div>
+
+            <div class="event-location">
+                <label>Location: </label> <span id="location">llocation goes here...</span>
+            </div>
+            <div class="event-time">
+                <label>Time: </label> <span id="time">1970-01-01 00:00:00 - 1970-01-01 00:00:00</span>
+            </div>
+            <div class="event-desc">
+                <label>Description: </label> <span id="desc">description goes here...</span>
+            </div>
+            <div class="event-rso">
+                <label>RSO: </label> <span id="rso">rso</span>
+            </div>
+            <div class="event-cat">
+                <label>Category: </label><span id="cat">category...</span>
+            </div>
+            <div class="event-phone">
+                <label>Contact Phone: </label> <span id="phone">123-456-78910</span>
+            </div>
+            <div class="event-email">
+                <label>Contact Email: </label> <span id="email">example@email.com</span>
+            </div>
+            <div class="rating-container" id="rating-container">
+                <div class="event-ratig" id="event-rating">
+                    <label>Rating: </label><span>#</span><span>/5</span>
+                </div>
+
+                <div class="rate-event">
+                    <input type="number" id="rating">
+                    <button id="add-rating">Rate Event</button>
+                </div>
+            </div>
+
+            <button id="add-comment">Comment</button>
+            <input type="text" id="comment-input">
+
+            <div class="comments-container" id="comments-container">
+                <div class="comment">
+                    <div class="comment-header" id="comment-header">
+                        <div class="comment-header-item" id="commentID">
+                            <span>Comment ID: </span><span>#</span>
+                        </div>
+                        <div class="comment-header-item" id="userID">
+                            <span>User ID: </span><span>#</span>
+                        </div>
+                    </div> 
+                    <span>Comment goes here...</span>
+                    <div class="comment-footer" id="comment-footer">
+                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
     </div>
+</div>
 </body>

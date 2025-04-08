@@ -381,6 +381,7 @@ function displayEvents(events) {
         dashboardContainer.innerHTML = ''; // Clear existing content
         events.forEach(event => {
             const eventCard = document.createElement('div');
+            eventCard.dataset.eventId = event.eventID;
             eventCard.classList.add('card');
             eventCard.innerHTML = `
                 <div class="card-info">
@@ -410,17 +411,250 @@ function displayEvents(events) {
                 </div>
             `;
             dashboardContainer.appendChild(eventCard);
+
+            eventCard.addEventListener('click', function() {
+                const eventId = this.dataset.eventId;
+                showEventPopup(event);
+            });
         });
     }
 }
 
-/*
-${event.rsoName ? `<span>RSO: ${event.rsoName}</span>` : ''}
-                    <span>Category: ${event.categoryName}</span>
-                    <span>Contact: ${event.contactEmail || event.contactPhone || 'N/A'}</span>
-                    <span>Created By: ${event.creatorUsername}</span>
-                    <span>Status: ${event.approvalStatus}</span>
-*/ 
+async function showEventPopup(event) {
+    const popup = document.getElementById('eventPopUp');
+    
+    // Set all the event information
+    document.getElementById('event-popup-header').querySelector('h1').textContent = event.name;
+    document.getElementById('location').textContent = event.locationName;
+    document.getElementById('time').textContent = `${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}`;
+    document.getElementById('desc').textContent = event.description;
+    
+    // Set optional fields (check if they exist first)
+    if (event.rsoName) {
+        document.getElementById('rso').textContent = event.rsoName;
+    } else {
+        document.getElementById('rso').textContent = 'N/A';
+    }
+    
+    if (event.category) {
+        document.getElementById('cat').textContent = event.category;
+    } else {
+        document.getElementById('cat').textContent = 'N/A';
+    }
+    
+    if (event.contactPhone) {
+        document.getElementById('phone').textContent = event.contactPhone;
+    } else {
+        document.getElementById('phone').textContent = 'N/A';
+    }
+    
+    if (event.contactEmail) {
+        document.getElementById('email').textContent = event.contactEmail;
+    } else {
+        document.getElementById('email').textContent = 'N/A';
+    }
+
+    const ratingsResult = await fetchAndCalculateAverageRating(event.eventID);
+
+    const ratingElement = document.querySelector('.event-ratig span:first-child');
+    if (ratingElement) {
+        ratingElement.textContent = ratingsResult.average;
+    }
+
+    const ratingInput = document.getElementById('rating');
+    const addRatingBtn = document.getElementById('add-rating');
+
+    const commentInput = document.getElementById('comment-input');
+    const addCommentBtn = document.getElementById('add-comment');
+    const commentsContainer = document.getElementById('comments-container');
+    
+    addRatingBtn.addEventListener('click', async () => {
+        const ratingValue = parseInt(ratingInput.value);
+        const UID = UIDFromCookie; 
+        
+        if (isNaN(ratingValue) || ratingValue < 1 || ratingValue > 5) {
+            alert('Please enter a rating between 1 and 5');
+            return;
+        }
+        
+        const result = await submitEventRating(event.eventID, UID, ratingValue);
+        
+        if (result.success) {
+            alert('Rating submitted successfully!');
+            // Refresh ratings display
+            const ratingsResult = await fetchAndCalculateAverageRating(event.eventID);
+            updateRatingDisplay(ratingsResult);
+            ratingInput.value = ''; // Clear input
+        } else {
+            alert('Error: ' + result.message);
+        }
+    });
+
+    addCommentBtn.addEventListener('click', async () => {
+        const commentText = commentInput.value.trim();
+        const UID = UIDFromCookie;
+        
+        if (!commentText) {
+            alert('Please enter a comment');
+            return;
+        }
+        
+        const result = await submitEventComment(event.eventID, UID, commentText);
+        
+        if (result.error) {
+            alert('Error: ' + result.error);
+        } else {
+            // Add the new comment to the UI immediately
+            addCommentToUI({
+                commentID: result.commentID,
+                UID: UID,
+                commentText: commentText,
+                createdAt: new Date().toISOString(),
+                updatedAtt: new Date().toISOString()
+            });
+            
+            commentInput.value = ''; // Clear input
+            alert('Comment submitted successfully!');
+        }
+    });
+    
+    // Function to add a comment to the UI
+    function addCommentToUI(comment) {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `
+            <div class="comment-header">
+                <div class="comment-header-item">
+                    <span>User ID: </span><span>${comment.UID}</span>
+                </div>
+            </div> 
+            <span>${comment.commentText}</span>
+            <div class="comment-footer">
+                <span>Posted at: </span><span>${formatDateTime(comment.createdAt)}</span>
+            </div>
+        `;
+        commentsContainer.prepend(commentElement); // Add new comment at the top
+    }
+    
+    // Function to load existing comments
+    async function loadComments() {
+        try {
+            const response = await fetch(`get-comments.php?eventID=${event.eventID}`);
+            const comments = await response.json();
+            
+            commentsContainer.innerHTML = ''; // Clear existing comments
+            comments.forEach(comment => addCommentToUI(comment));
+        } catch (error) {
+            console.error('Error loading comments:', error);
+        }
+    }
+    
+    // Load initial comments
+    await loadComments();
+
+    
+    // Show the popup
+    popup.style.display = 'block';
+    
+    // Add close button functionality
+    document.getElementById('close-popup').onclick = function() {
+        popup.style.display = 'none';
+    };
+    
+    // Close when clicking outside the popup
+    popup.addEventListener('click', function(e) {
+        if (e.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+}
+
+async function fetchAndCalculateAverageRating(eventID) {
+    try {
+        // Fetch ratings from the API
+        const response = await fetch(`https://zahirgutierrez.com/LAMPAPI/RatingsFetch.php?eventID=${eventID}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Check if ratings exist
+        if (data.status !== 'success' || !data.ratings || data.ratings.length === 0) {
+            return { average: 0, count: 0 }; // Return 0 if no ratings
+        }
+        
+        // Calculate average and round up
+        const ratings = data.ratings;
+        const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
+        const average = Math.ceil(sum / ratings.length); // Round UP to nearest whole number
+        
+        return {
+            average: average,
+            count: ratings.length,
+            ratings: ratings // Optional: include all ratings if needed
+        };
+        
+    } catch (error) {
+        console.error('Error fetching ratings:', error);
+        return { average: 0, count: 0, error: error.message };
+    }
+}
+
+async function submitEventRating(eventID, UID, ratingValue) {
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/RatingCreate.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                eventID: eventID,
+                UID: UID,
+                rating: ratingValue
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            return { success: true, message: data.message };
+        } else {
+            return { success: false, message: data.message };
+        }
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        return { success: false, message: 'Failed to submit rating' };
+    }
+}
+
+
+async function submitEventComment(eventID, UID, commentText) {
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/CommentCreate.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                eventID: eventID,
+                UID: UID,
+                commentText: commentText
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error submitting comment:', error);
+        return { error: error.message };
+    }
+}
+
 
 // Helper function to format datetime (you might want a more robust one)
 function formatDateTime(dateTimeString) {
