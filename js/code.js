@@ -558,17 +558,15 @@ function displayComments(comments, container) {
                     <span>Comment ID: </span><span>${comment.commentID}</span>
                 </div>
                 <div class="comment-header-item">
-                    <span>User ID: </span><span>${formatDateTime(comment.UID)}</span>
+                    <span>User ID: </span><span>${comment.UID}</span>
                 </div>
             </div>
             <div class="comment-body">
                 <p>${comment.commentText}</p>
             </div>
-            ${comment.updatedAtt !== comment.createdAt ? 
-                `<div class="comment-footer">
-                    <span>Edited: </span><span>${formatDateTime(comment.updatedAtt)}</span>
-                </div>` : ''
-            }
+            <div class="comment-footer">
+                <span>Edited: </span><span>${formatDateTime(comment.updatedAtt)}</span>
+            </div>
         `;
         container.appendChild(commentElement);
     });
