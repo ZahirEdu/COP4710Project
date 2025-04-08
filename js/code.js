@@ -156,9 +156,9 @@ function readCookie() {
 function updateDashboardUID() {
     const dashboardHeader = document.querySelector('.dashboard-header');
     if (UIDFromCookie) {
-        dashboardHeader.innerHTML = `Dashboard | UID: ${UIDFromCookie}`;
+        dashboardHeader.innerHTML = `Dashboard | User ID: ${UIDFromCookie}`;
     } else {
-        dashboardHeader.innerHTML = `Dashboard | UID not available`;
+        dashboardHeader.innerHTML = `Dashboard | User ID not available`;
     }
 }
 
