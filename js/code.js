@@ -574,7 +574,7 @@ function displayComments(comments, container) {
                 <p>${comment.commentText}</p>
             </div>
             <div class="comment-footer">
-                <span>Edited: </span><span>${formatDateTime(comment.updatedAtt)}</span>
+                <span>Updated: </span><span>${formatDateTime(comment.updatedAtt)}</span>
             </div>
         `;
         container.appendChild(commentElement);
