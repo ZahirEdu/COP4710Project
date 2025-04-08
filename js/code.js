@@ -153,6 +153,19 @@ function readCookie() {
     roleFromCookie = userData.role;
 }
 
+function updateDashboardUID() {
+    const dashboardHeader = document.querySelector('.dashboard-header');
+    if (UIDFromCookie) {
+        dashboardHeader.innerHTML = `Dashboard | UID: ${UIDFromCookie}`;
+    } else {
+        dashboardHeader.innerHTML = `Dashboard | UID not available`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    updateDashboardUID();  
+}, false);
+
 function doLogout() {
     // Clear the cookies by setting their expiration date to the past
     document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
