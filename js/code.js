@@ -467,6 +467,14 @@ async function showEventPopup(event) {
     const commentInput = document.getElementById('comment-input');
     const addCommentBtn = document.getElementById('add-comment');
     const commentsContainer = document.getElementById('comments-container');
+
+    try {
+        const comments = await fetchEventComments(event.eventID);
+        displayComments(comments, commentsContainer);
+    } catch (error) {
+        console.error('Error loading comments:', error);
+        commentsContainer.innerHTML = '<p>Error loading comments. Please try again.</p>';
+    }
     
     addRatingBtn.addEventListener('click', async () => {
         const ratingValue = parseInt(ratingInput.value);
@@ -489,69 +497,32 @@ async function showEventPopup(event) {
             alert('Error: ' + result.message);
         }
     });
-
+    
     addCommentBtn.addEventListener('click', async () => {
         const commentText = commentInput.value.trim();
-        const UID = UIDFromCookie;
+        const UID = getCurrentUserID(); // Implement this based on your auth system
         
         if (!commentText) {
             alert('Please enter a comment');
             return;
         }
         
-        const result = await submitEventComment(event.eventID, UID, commentText);
-        
-        if (result.error) {
-            alert('Error: ' + result.error);
-        } else {
-            // Add the new comment to the UI immediately
-            addCommentToUI({
-                commentID: result.commentID,
-                UID: UID,
-                commentText: commentText,
-                createdAt: new Date().toISOString(),
-                updatedAtt: new Date().toISOString()
-            });
+        try {
+            const result = await submitEventComment(event.eventID, UID, commentText);
             
-            commentInput.value = ''; // Clear input
-            alert('Comment submitted successfully!');
+            if (result.error) {
+                alert('Error: ' + result.error);
+            } else {
+                // Refresh comments after successful submission
+                const comments = await fetchEventComments(event.eventID);
+                displayComments(comments, commentsContainer);
+                commentInput.value = ''; // Clear input
+            }
+        } catch (error) {
+            alert('Failed to submit comment: ' + error.message);
         }
     });
     
-    // Function to add a comment to the UI
-    function addCommentToUI(comment) {
-        const commentElement = document.createElement('div');
-        commentElement.classList.add('comment');
-        commentElement.innerHTML = `
-            <div class="comment-header">
-                <div class="comment-header-item">
-                    <span>User ID: </span><span>${comment.UID}</span>
-                </div>
-            </div> 
-            <span>${comment.commentText}</span>
-            <div class="comment-footer">
-                <span>Posted at: </span><span>${formatDateTime(comment.createdAt)}</span>
-            </div>
-        `;
-        commentsContainer.prepend(commentElement); // Add new comment at the top
-    }
-    
-    // Function to load existing comments
-    async function loadComments() {
-        try {
-            const response = await fetch(`get-comments.php?eventID=${event.eventID}`);
-            const comments = await response.json();
-            
-            commentsContainer.innerHTML = ''; // Clear existing comments
-            comments.forEach(comment => addCommentToUI(comment));
-        } catch (error) {
-            console.error('Error loading comments:', error);
-        }
-    }
-    
-    // Load initial comments
-    await loadComments();
-
     
     // Show the popup
     popup.style.display = 'block';
@@ -568,6 +539,68 @@ async function showEventPopup(event) {
         }
     });
 }
+
+function displayComments(comments, container) {
+    // Clear existing comments
+    container.innerHTML = '';
+
+    if (comments.length === 0) {
+        container.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+        return;
+    }
+
+    comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `
+            <div class="comment-header">
+                <div class="comment-header-item">
+                    <span>Comment ID: </span><span>${comment.commentID}</span>
+                </div>
+                <div class="comment-header-item">
+                    <span>User ID: </span><span>${formatDateTime(comment.UID)}</span>
+                </div>
+            </div>
+            <div class="comment-body">
+                <p>${comment.commentText}</p>
+            </div>
+            ${comment.updatedAtt !== comment.createdAt ? 
+                `<div class="comment-footer">
+                    <span>Edited: </span><span>${formatDateTime(comment.updatedAtt)}</span>
+                </div>` : ''
+            }
+        `;
+        container.appendChild(commentElement);
+    });
+}
+
+async function fetchEventComments(eventID) {
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/CommentsFetch.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ eventID: eventID })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        return data.comments || [];
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        return []; // Return empty array on error
+    }
+}
+
 
 async function fetchAndCalculateAverageRating(eventID) {
     try {
