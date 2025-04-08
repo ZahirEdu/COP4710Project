@@ -156,7 +156,7 @@ body {
 
 
 .event-popup{
-    display: block; 
+    display: none; 
     position: absolute; 
     top: 50%;
     left: 50%;
@@ -170,7 +170,34 @@ body {
     width: 400px;
     max-height: 600px;
     color: #14213d;
+    overflow-y: scroll;
 }
+
+.event-popup::-webkit-scrollbar {
+    width: 8px; 
+
+  }
+  
+  .event-popup::-webkit-scrollbar-thumb {
+    background-color: #fff; 
+    border-radius: 4px; 
+    border: 2px solid transparent; 
+    background-clip: padding-box; 
+  }
+  
+  .event-popup::-webkit-scrollbar-track {
+    background-color: #fff; 
+    border-radius: 4px;
+  }
+  
+  .event-popup::-webkit-scrollbar-thumb:hover {
+    background-color: #fff; 
+  }
+  
+  .event-popup::-webkit-scrollbar-corner {
+    background-color: #fff; 
+  }
+
 
 .event-popup-header {
     border-bottom: 2px solid #14213d;
@@ -180,7 +207,6 @@ body {
 
 .event-popup-header button{
     font-size: 30px;
-    transform: translateX(110px);
     background-color: #fff;
     border: none;
     outline: none;
@@ -215,7 +241,7 @@ body {
 
 .comments-container{
     margin-top: 10px;
-    max-height: 275px;
+    max-height: 230px;
     overflow-y:scroll;
     
 }
@@ -242,7 +268,7 @@ body {
   }
   
   .comments-container::-webkit-scrollbar-corner {
-    background-color: #fff; /
+    background-color: #fff; 
   }
 
 
