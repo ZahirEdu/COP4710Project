@@ -549,7 +549,7 @@ function updateRatingDisplay(ratingsResult) {
     }
 }
 
-function displayComments(comments, container) {
+function displayComments(comments, container, eventID) {
     // Clear existing comments
     container.innerHTML = '';
 
@@ -561,6 +561,10 @@ function displayComments(comments, container) {
     comments.forEach(comment => {
         const commentElement = document.createElement('div');
         commentElement.classList.add('comment');
+        commentElement.dataset.commentId = comment.commentID;
+
+        const showDeleteButton = comment.UID == UIDFromCookie;
+
         commentElement.innerHTML = `
             <div class="comment-header">
                 <div class="comment-header-item">
@@ -574,10 +578,33 @@ function displayComments(comments, container) {
                 <p>${comment.commentText}</p>
             </div>
             <div class="comment-footer">
+                ${showDeleteButton ? 
+                    `<button class="delete-comment" data-comment-id="${comment.commentID}">
+                        <i class='bx bx-trash'></i>
+                    </button>` : ''
+                }
                 <span>Updated: </span><span>${formatDateTime(comment.updatedAtt)}</span>
             </div>
         `;
         container.appendChild(commentElement);
+
+        if (showDeleteButton) {
+            const deleteBtn = commentElement.querySelector('.delete-comment');
+            deleteBtn.addEventListener('click', async () => {
+                if (confirm('Are you sure you want to delete this comment?')) {
+                    const result = await deleteComment(comment.commentID, UIDFromCookie);
+                    
+                    if (result.error) {
+                        alert('Error: ' + result.error);
+                    } else {
+                        // Refresh comments after successful deletion
+                        const comments = await fetchEventComments(eventID);
+                        displayComments(comments, container, eventID);
+                        alert('Comment deleted successfully!');
+                    }
+                }
+            });
+        }
     });
 }
 
@@ -691,6 +718,30 @@ async function submitEventComment(eventID, UID, commentText) {
         return await response.json();
     } catch (error) {
         console.error('Error submitting comment:', error);
+        return { error: error.message };
+    }
+}
+
+async function deleteComment(commentID, UID) {
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/CommentDelete.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                commentID: commentID,
+                UID: UID
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error deleting comment:', error);
         return { error: error.message };
     }
 }

@@ -201,22 +201,22 @@ body {
 
 .event-popup-header {
     border-bottom: 2px solid #14213d;
-    
+    display: flex;
     justify-content: left;
 }
 
 .event-popup-header button{
     font-size: 30px;
-    background-color: #fff;
+    background: #fff !important;
     border: none;
     outline: none;
     color: red;
+    height: 50px;
+
 }
-.event-popup-header button:hover{
-    color: rgb(175, 0, 0);
-}
-.event-popup-header button i{
-    transform: translateY(10%);
+.event-popup-header button:hover {
+    color: #fff;
+    background:red !important;
 }
 
 .event-popup label {
@@ -228,6 +228,34 @@ body {
     margin-bottom: 20px;
 }
 
+
+.rate-event button{
+    padding: 10px;
+    border:none;
+    outline: none;
+    border-radius: 8px;
+    background: #fca311;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.event-popup button {
+    padding: 10px;
+    border:none;
+    outline: none;
+    border-radius: 8px;
+    background: #fca311;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.event-popup button:hover{
+    background: #e09010;
+}
+
+.rate-event button:hover{
+    background: #e09010;
+}
 
 .rate-event input {
 
@@ -290,8 +318,6 @@ body {
     margin-bottom: 5px;
 }
 
-
-
 .comment-footer {
     margin-top: 5px;
     background-color: #f2f2f2;
@@ -300,5 +326,19 @@ body {
     padding: 5px;
     font-size: 12px;
     font-weight: 500;
+}
+
+.comment-footer button{
+    color: #14213d;
+    background: transparent;
+    font-size: 16px;
+    padding: 0;
+    margin-right: 110px;
+}
+
+.comment-footer button:hover{
+    color: red;
+    background: transparent;
+
 }
 
