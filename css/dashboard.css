@@ -156,7 +156,7 @@ body {
 
 
 .event-popup{
-    display: none; 
+    display: block; 
     position: absolute; 
     top: 50%;
     left: 50%;
