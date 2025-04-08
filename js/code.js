@@ -470,7 +470,7 @@ async function showEventPopup(event) {
 
     try {
         const comments = await fetchEventComments(event.eventID);
-        displayComments(comments, commentsContainer);
+        displayComments(comments, commentsContainer,event.eventID);
     } catch (error) {
         console.error('Error loading comments:', error);
         commentsContainer.innerHTML = '<p>Error loading comments. Please try again.</p>';
@@ -515,7 +515,7 @@ async function showEventPopup(event) {
             } else {
                 // Refresh comments after successful submission
                 const comments = await fetchEventComments(event.eventID);
-                displayComments(comments, commentsContainer);
+                displayComments(comments, commentsContainer,event.eventID);
                 commentInput.value = ''; // Clear input
             }
         } catch (error) {
