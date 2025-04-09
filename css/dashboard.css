@@ -191,7 +191,7 @@ body {
     overflow-y: scroll;
 }
 
-.event-create-popup{
+.event-create-popup {
     display: none; 
     position: absolute; 
     top: 50%;
