@@ -2,6 +2,8 @@ const urlBase = 'https://zahirgutierrez.com/LAMPAPI'
 const extension = 'php';
 
 document.addEventListener('DOMContentLoaded', readCookie);
+document.addEventListener('DOMContentLoaded', pendingEventsLoad);
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.querySelector('.form-box.login');
@@ -433,6 +435,11 @@ function displayEvents(events) {
     }
 }
 
+async function showCreateRsoPopup() {
+    const popup = document.getElementById('rso-create-popup');
+
+}
+
 async function showEventPopup(event) {
     const popup = document.getElementById('eventPopUp');
     
@@ -758,6 +765,285 @@ async function deleteComment(commentID, UID) {
         return { error: error.message };
     }
 }
+
+async function createRSO(event) {
+    event.preventDefault(); // Prevent form submission
+    
+    // Get form values
+    const rsoData = {
+        name: document.getElementById('rso-create-name').value,
+        description: document.getElementById('rso-create-desc').value,
+        universityID: document.getElementById('rso-create-uni-id').value,
+        adminID: document.getElementById('rso-create-uid').value,
+        status: 'active'
+    };
+
+    // Get member emails (filter out empty ones)
+    const memberEmails = [
+        document.getElementById('rso-create-mem1').value,
+        document.getElementById('rso-create-mem2').value,
+        document.getElementById('rso-create-mem3').value,
+        document.getElementById('rso-create-mem4').value
+    ].filter(email => email.trim() !== '');
+
+    try {
+        // Step 1: Create the RSO
+        const rsoResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/RSOCreate.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(rsoData)
+        });
+
+        const rsoResult = await rsoResponse.json();
+        
+        if (rsoResult.status !== 'success') {
+            throw new Error(rsoResult.message || 'Failed to create RSO');
+        }
+
+        const rsoID = rsoResult.rsoID;
+        
+        // Step 2: Add members to the RSO
+        for (const email of memberEmails) {
+            try {
+                // Fetch UID for each member email
+                const uidResponse = await fetch(`https://zahirgutierrez.com/LAMPAPI/EmailFetch.php?email=${encodeURIComponent(email)}`);
+                const uidResult = await uidResponse.json();
+                
+                if (uidResult.status !== 'success') {
+                    console.error(`Failed to find user with email ${email}:`, uidResult.message);
+                    continue; // Skip to next member if this one fails
+                }
+
+                // Add member to RSO
+                const joinData = {
+                    rsoID: rsoID,
+                    UID: uidResult.UID
+                };
+
+                const joinResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/RSOJoin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(joinData)
+                });
+
+                const joinResult = await joinResponse.json();
+                
+                if (joinResult.status !== 'success') {
+                    console.error(`Failed to add user ${email} to RSO:`, joinResult.message);
+                }
+            } catch (error) {
+                console.error(`Error processing member ${email}:`, error);
+            }
+        }
+
+        // Success message
+        alert('RSO created successfully with members added!');
+        // Optionally close the popup or reset the form
+        document.getElementById('close-popup').click();
+        
+    } catch (error) {
+        console.error('Error creating RSO:', error);
+        alert('Error creating RSO: ' + error.message);
+    }
+}
+
+
+async function editFormSubmit(event) {
+    event.preventDefault();
+    
+    const commentID = document.getElementById('comment-id').value;
+    const commentText = document.getElementById('new-comment-text').value;
+
+    const UID = UIDFromCookie;
+
+    if (!commentID || !commentText || !UID) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    const data = {
+        commentID: parseInt(commentID),
+        UID: parseInt(UID),
+        commentText: commentText
+    };
+
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/CommentEdit.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        alert(result.message || 'Comment updated successfully');
+
+        event.target.reset();
+
+    } catch (error) {
+        console.error('Error updating comment:', error);
+        alert('Failed to update comment: ' + error.message);
+    }
+}
+
+async function joinRSOSubmit(event) {
+    event.preventDefault();
+    
+    const rsoID = document.getElementById('rso-join-id').value;
+    const UID = UIDFromCookie;
+
+    if (!rsoID) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    const data = {
+        rsoID: parseInt(rsoID),
+        UID: parseInt(UID)
+    };
+
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/RSOJoin.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        alert(result.message || 'RSO joined successfully');
+
+        event.target.reset();
+           
+    } catch (error) {
+        console.error('Error joining RSO:', error);
+        alert('Failed to join RSO: ' + error.message);
+    }
+}
+
+async function leaveRSOSubmit(event) {
+    event.preventDefault();
+    
+    const rsoID = document.getElementById('rso-leave-id').value;
+    const UID = UIDFromCookie;
+
+    if (!rsoID) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    const data = {
+        rsoID: parseInt(rsoID),
+        UID: parseInt(UID)
+    };
+
+    try {
+        const response = await fetch('https://zahirgutierrez.com/LAMPAPI/RSOLeave.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        alert(result.message || 'RSO Left successfully');
+
+        event.target.reset();
+           
+    } catch (error) {
+        console.error('Error leaving RSO:', error);
+        alert('Failed to leave RSO: ' + error.message);
+    }
+}
+
+document.querySelector('form').addEventListener('submit', editFormSubmit);
+document.querySelector('form').addEventListener('submit', joinRSOSubmit);
+document.querySelector('form').addEventListener('submit', leaveRSOSubmit);
+
+
+function toggleRSOForm() {
+    const form = document.getElementById('rso-create-popup');
+    const li = document.getElementById('li-rso-create');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        li.style.backgroundColor= '#e09010';
+      } else {
+        form.style.display = 'none';
+        li.style.backgroundColor= '#fca311';
+      }
+}
+
+function toggleRSOJoinForm() {
+    const form = document.getElementById('rso-join-popup');
+    const li = document.getElementById('li-rso-join');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        li.style.backgroundColor= '#e09010';
+      } else {
+        form.style.display = 'none';
+        li.style.backgroundColor= '#fca311';
+      }
+}
+function toggleRSOLeaveForm() {
+    const form = document.getElementById('rso-leave-popup');
+    const li = document.getElementById('li-rso-leave');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        li.style.backgroundColor= '#e09010';
+      } else {
+        form.style.display = 'none';
+        li.style.backgroundColor= '#fca311';
+      }
+}
+function toggleCommentForm() {
+    const form = document.getElementById('edit-comment-popup');
+    const li = document.getElementById('li-comment');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        li.style.backgroundColor= '#e09010';
+      } else {
+        form.style.display = 'none';
+        li.style.backgroundColor= '#fca311';
+      }
+}
+
+async function pendingEventsLoad() {
+    const element = document.getElementById('superadmin-only');
+    const role = roleFromCookie;
+
+    if (role === 'superadmin') {
+        element.style.display = 'block'; 
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+document.getElementById('rso-create-popup').addEventListener('click', toggleRSOForm);
+
+// Add the event listener to your form
+document.querySelector('form').addEventListener('submit', createRSO);
 
 
 // Helper function to format datetime (you might want a more robust one)

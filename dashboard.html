@@ -31,37 +31,37 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a= href="#" onclick="" class="menu-item-a">
+                <a= href="#" onclick="loadAndDisplayEvents()" class="menu-item-a">
                     <i class='bx bx-refresh'></i>
                     <div class="menu-item-text"> Refresh Events </div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a= href="#" onclick="" class="menu-item-a">
+            <li class="menu-item" id="li-comment">
+                <a= href="#" onclick="toggleCommentForm()" class="menu-item-a">
                     <i class='bx bx-message-alt-edit' ></i>
                     <div class="menu-item-text"> Edit Comment </div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" id="superadmin-only">
                 <a= href="#" onclick="" class="menu-item-a">
                     <i class='bx bx-calendar-exclamation' ></i>
                     <div class="menu-item-text">Pending Events </div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a= href="#" onclick="" class="menu-item-a">
+            <li class="menu-item" id="li-rso-create">
+                <a= href="#" onclick="toggleRSOForm()" class="menu-item-a">
                     <i class='bx bx-book-add' ></i>
                     <div class="menu-item-text"> Create RSO </div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a= href="#" onclick="" class="menu-item-a">
+            <li class="menu-item" id="li-rso-join">
+                <a= href="#" onclick="toggleRSOJoinForm()" class="menu-item-a">
                     <i class='bx bx-plus-circle' ></i>
                     <div class="menu-item-text"> Join RSO </div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a= href="#" onclick="" class="menu-item-a">
+            <li class="menu-item" id="li-rso-leave">
+                <a= href="#" onclick="toggleRSOLeaveForm()" class="menu-item-a">
                     <i class='bx bx-minus-circle' ></i>
                     <div class="menu-item-text"> Leave RSO </div>
                 </a>
@@ -103,129 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" id="card">
-                        <div class="card-info">
-                            <div class="card-title">
-                                <span>event name</span>
-                            </div>
-                            <div class="card-location">
-                                <span style="font-weight: 600;">Location: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-time">
-                                <span style="font-weight: 600;">Time: </span> <span style="font-weight: 500;">location</span>
-                            </div>
-                            <div class="card-desc">
-                                <span>Fancy 이건 참 화려해
-                                    It's glowing and it's flashy (yeah)
-                                    알아, 적당함이 뭔지 keep it classy
-                                    따라 하지 넌 또 하나부터 열까지 (yeah)
-                                    아닌척하지 (yeah)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                
+                    </div>               
                 </div>
             </div>
         </div>
@@ -233,7 +111,6 @@
         <div class="event-popup" id="eventPopUp">
             <div class="event-popup-header" id="event-popup-header">
                 <h1>Public Lecture on AI</h1>
-                <button id="close-popup" onclick=""><i class='bx bx-window-close'></i></button>
             </div>
 
             <div class="event-location">
@@ -289,121 +166,95 @@
                         <span>Updated at: </span><span>1970-01-01 00:00:00</span>
                     </div>
                 </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                <div class="comment">
-                    <div class="comment-header" id="comment-header">
-                        <div class="comment-header-item" id="commentID">
-                            <span>Comment ID: </span><span>#</span>
-                        </div>
-                        <div class="comment-header-item" id="userID">
-                            <span>User ID: </span><span>#</span>
-                        </div>
-                    </div> 
-                    <span>Comment goes here...</span>
-                    <div class="comment-footer" id="comment-footer">
-                        <span>Updated at: </span><span>1970-01-01 00:00:00</span>
-                    </div>
-                </div>
-                
             </div>
         </div>
+        <!--EDIT COM POPUP-->
+        <div class="edit-comment-popup" id="edit-comment-popup">
+            <form onsubmit="editFormSubmit(event)">
+                <div class="title">
+                    <h1>Edit Comment</h1>
+                </div>
+                <div class="input-box">
+                    <h2>Comment ID: </h2>
+                    <input type="number" id="comment-id" required>
+                </div>
+                <div class="input-box" id="">
+                    <h2>Comment: </h2>
+                    <input type="text" id="new-comment-text" placeholder="Hello World!" required>
+                </div>
+                <button type="submit">Edit Comment</button>
+            </form>
+         </div>
+         <!--CREATE RSO POPUP-->
+         <div class="rso-create-popup" id="rso-create-popup">
+            <form onsubmit="">
+            <div class="title">
+                <h1>Create RSO</h1>
+            </div>
+            <div class="input-box" id="">
+                <h2>Name: </h2>
+                <input type="text" id="rso-create-name" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Description: </h2>
+                <input type="text" id="rso-create-desc"required>
+            </div>
+            <div class="input-box" id="">
+                <h2>University ID: </h2>
+                <input type="number" id="rso-create-uni-id"required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Admin ID: </h2>
+                <input type="number" id="rso-create-uid" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Member Email: </h2>
+                <input type="text" id="rso-create-mem1">
+            </div>
+            <div class="input-box" id="">
+                <h2>Member Email: </h2>
+                <input type="text" id="rso-create-mem2">
+            </div>
+            <div class="input-box" id="">
+                <h2>Member Email: </h2>
+                <input type="text" id="rso-create-mem3">
+            </div>
+            <div class="input-box" id="">
+                <h2>Member Email: </h2>
+                <input type="text" id="rso-create-mem4">
+            </div>
+
+            <button type="submit">Create RSO</button>
+        </form>
+
+         </div>
+         <!--JOIN RSO POPUP-->
+         <div class="rso-join-popup" id="rso-join-popup">
+            <form>
+                <div class="title">
+                    <h1>Join RSO</h1>
+                </div>
+                <div class="input-box" id="">
+                    <h2>RSO ID: </h2>
+                    <input type="number" id="rso-join-id" required>
+                </div>
+                <button type="submit">Join RSO</button>
+            </form>
+         </div>
+         <!--LEAVE RSO POPUP-->
+         <div class="rso-leave-popup" id="rso-leave-popup">
+            <form>
+                <div class="title">
+                    <h1>Leave RSO</h1>
+                </div>
+                <div class="input-box" id="">
+                    <h2>RSO ID: </h2>
+                    <input type="number" id="rso-leave-id" required>
+                </div>
+                <button type="submit">Leave RSO</button>
+            </form>
+         </div>
+        
         
     </div>
 </div>
