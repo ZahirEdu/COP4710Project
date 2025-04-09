@@ -768,7 +768,7 @@ async function deleteComment(commentID, UID) {
 
 async function createRSO(event) {
     event.preventDefault(); // Prevent form submission
-    
+    console.log('Creating RSO...');
     // Get form values
     const rsoData = {
         name: document.getElementById('rso-create-name').value,
@@ -854,7 +854,7 @@ async function createRSO(event) {
 
 async function editFormSubmit(event) {
     event.preventDefault();
-    
+
     const commentID = document.getElementById('comment-id').value;
     const commentText = document.getElementById('new-comment-text').value;
 
@@ -898,7 +898,7 @@ async function editFormSubmit(event) {
 
 async function joinRSOSubmit(event) {
     event.preventDefault();
-    
+    console.log('Joining RSO...');
     const rsoID = document.getElementById('rso-join-id').value;
     const UID = UIDFromCookie;
 
@@ -939,7 +939,7 @@ async function joinRSOSubmit(event) {
 
 async function leaveRSOSubmit(event) {
     event.preventDefault();
-    
+    console.log('Leaving RSO...');
     const rsoID = document.getElementById('rso-leave-id').value;
     const UID = UIDFromCookie;
 
@@ -979,10 +979,12 @@ async function leaveRSOSubmit(event) {
 }
 
 
+document.getElementById('edit-comment-form')?.addEventListener('submit', editFormSubmit);
+document.getElementById('join-rso-form')?.addEventListener('submit', joinRSOSubmit);
+document.getElementById('leave-rso-form')?.addEventListener('submit', leaveRSOSubmit);
+document.getElementById('create-rso-form')?.addEventListener('submit', createRSO);
+document.getElementById('create-event-form')?.addEventListener('submit', createEvent);
 
-document.querySelector('form').addEventListener('submit', editFormSubmit);
-document.querySelector('form').addEventListener('submit', joinRSOSubmit);
-document.querySelector('form').addEventListener('submit', leaveRSOSubmit);
 
 function toggleRSOForm() {
     const form = document.getElementById('rso-create-popup');
@@ -1055,8 +1057,6 @@ async function pendingEventsLoad() {
 
 document.getElementById('rso-create-popup').addEventListener('click', toggleRSOForm);
 
-// Add the event listener to your form
-document.querySelector('form').addEventListener('submit', createRSO);
 
 
 // Helper function to format datetime (you might want a more robust one)
@@ -1072,8 +1072,9 @@ document.addEventListener('DOMContentLoaded', loadAndDisplayEvents);
 
 async function createEvent(event) {
     event.preventDefault();
-
+    console.log('Creating Event...');
     // Get form values
+    const form = event.target;
     const formData = {
         name: document.getElementById('event-create-name').value,
         description: document.getElementById('event-create-desc').value,
@@ -1178,7 +1179,4 @@ async function createEvent(event) {
         alert('Error: ' + error.message);
     }
 }
-
-// Add to your form
-document.querySelector('form').addEventListener('submit', createEvent);
 
