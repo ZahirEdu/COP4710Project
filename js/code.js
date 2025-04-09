@@ -937,8 +937,7 @@ async function joinRSOSubmit(event) {
     }
 }
 
-async function leaveRSOSubmit(event) {
-    event.preventDefault();
+ async function leaveRSOSubmit() {
     console.log('Leaving RSO...');
     const rsoID = document.getElementById('rso-leave-id').value;
     const UID = UIDFromCookie;
@@ -981,7 +980,6 @@ async function leaveRSOSubmit(event) {
 
 document.getElementById('edit-comment-form')?.addEventListener('submit', editFormSubmit);
 document.getElementById('join-rso-form')?.addEventListener('submit', joinRSOSubmit);
-document.getElementById('leave-rso-form')?.addEventListener('submit', leaveRSOSubmit);
 document.getElementById('create-rso-form')?.addEventListener('submit', createRSO);
 document.getElementById('create-event-form')?.addEventListener('submit', createEvent);
 
