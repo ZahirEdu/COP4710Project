@@ -27,7 +27,7 @@ if (empty($address)) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT locationID, name, lat, lon, address, place_id, room FROM locations WHERE address = ?");
+$stmt = $conn->prepare("SELECT locationID FROM locations WHERE address = ?");
 $stmt->bind_param("s", $address);
 
 $stmt->execute();

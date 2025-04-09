@@ -978,14 +978,27 @@ async function leaveRSOSubmit(event) {
     }
 }
 
+
+
 document.querySelector('form').addEventListener('submit', editFormSubmit);
 document.querySelector('form').addEventListener('submit', joinRSOSubmit);
 document.querySelector('form').addEventListener('submit', leaveRSOSubmit);
 
-
 function toggleRSOForm() {
     const form = document.getElementById('rso-create-popup');
     const li = document.getElementById('li-rso-create');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+        li.style.backgroundColor= '#e09010';
+      } else {
+        form.style.display = 'none';
+        li.style.backgroundColor= '#fca311';
+      }
+}
+
+function toggleCreateEventForm() {
+    const form = document.getElementById('event-create-popup');
+    const li = document.getElementById('li-create-event');
     if (form.style.display === 'none') {
         form.style.display = 'block';
         li.style.backgroundColor= '#e09010';
@@ -1054,3 +1067,118 @@ function formatDateTime(dateTimeString) {
 
 // Call loadAndDisplayEvents when the page loads (or at the appropriate time)
 document.addEventListener('DOMContentLoaded', loadAndDisplayEvents);
+
+
+
+async function createEvent(event) {
+    event.preventDefault();
+
+    // Get form values
+    const formData = {
+        name: document.getElementById('event-create-name').value,
+        description: document.getElementById('event-create-desc').value,
+        start_time: document.getElementById('event-create-start').value,
+        end_time: document.getElementById('event-create-end').value,
+        address: document.getElementById('event-create-loc').value,
+        contactPhone: document.getElementById('event-create-phone').value,
+        contactEmail: document.getElementById('event-create-email').value,
+        eventType: document.getElementById('event-create-type').value,
+        rsoID: document.getElementById('event-create-rso').value || null,
+        UID: UIDFromCookie,
+        universityID: universityIDFromCookie
+    };
+
+    // Validate required fields
+    if (!formData.name || !formData.description || !formData.start_time || 
+        !formData.end_time || !formData.address || !formData.contactPhone || 
+        !formData.contactEmail || !formData.eventType || !formData.UID || 
+        !formData.universityID) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    try {
+        // Step 1: Check if location exists
+        let locationID;
+        const locationSearchResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/LocationSearch.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ address: formData.address })
+        });
+
+        const locationSearchResult = await locationSearchResponse.json();
+
+        if (locationSearchResult.status === 'success') {
+            // Location exists, use its ID
+            locationID = locationSearchResult.locationID;
+        } else {
+            // Location doesn't exist, create it
+            // Note: You'll need to implement geocoding to get lat/lon in a real app
+            // For now using placeholder coordinates
+            const locationCreateResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/LocationCreate.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.address,
+                    lat: 0.0, // Replace with actual geocoding in production
+                    lon: 0.0, // Replace with actual geocoding in production
+                    address: formData.address
+                })
+            });
+
+            const locationCreateResult = await locationCreateResponse.json();
+            
+            if (locationCreateResult.status !== 'success') {
+                throw new Error('Failed to create location: ' + (locationCreateResult.message || 'Unknown error'));
+            }
+
+            locationID = locationCreateResult.locationID;
+        }
+
+        // Step 2: Create the event
+        const eventData = {
+            name: formData.name,
+            description: formData.description,
+            catID: 1, // Always set to 1 as per requirements
+            start_time: formData.start_time,
+            end_time: formData.end_time,
+            locationID: locationID,
+            contactPhone: formData.contactPhone,
+            contactEmail: formData.contactEmail,
+            eventType: formData.eventType,
+            UID: formData.UID,
+            universityID: formData.universityID,
+            rsoID: formData.rsoID
+        };
+
+        const eventCreateResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/EventCreate.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventData)
+        });
+
+        const eventCreateResult = await eventCreateResponse.json();
+
+        if (eventCreateResult.status === 'success') {
+            alert('Event created successfully!');
+            // Optional: Reset form or redirect
+            event.target.reset();
+        } else {
+            throw new Error(eventCreateResult.message || 'Failed to create event');
+        }
+
+    } catch (error) {
+        console.error('Error creating event:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+// Add to your form
+document.querySelector('form').addEventListener('submit', createEvent);
+

@@ -24,8 +24,8 @@
                     <div class="menu-item-text"> UniEvents </div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a= href="" onclick="" class="menu-item-a">
+            <li class="menu-item" id="li-create-event">
+                <a= href="" onclick="toggleCreateEventForm()" class="menu-item-a">
                     <i class='bx bx-location-plus' ></i>
                     <div class="menu-item-text"> Create Event </div>
                 </a>
@@ -111,6 +111,7 @@
         <div class="event-popup" id="eventPopUp">
             <div class="event-popup-header" id="event-popup-header">
                 <h1>Public Lecture on AI</h1>
+                <button id="close-popup" onclick=""><i class='bx bx-window-close'></i></button>
             </div>
 
             <div class="event-location">
@@ -168,6 +169,58 @@
                 </div>
             </div>
         </div>
+        <!--CREATE EVENT POPUP-->
+        <div class="event-create-popup" id="event-create-popup">
+            <form onsubmit="createEvent(event)">
+            <div class="title">
+                <h1>Create Event</h1>
+            </div>
+            <div class="input-box" id="">
+                <h2>Name: </h2>
+                <input type="text" id="event-create-name" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Description: </h2>
+                <input type="text" id="event-create-desc"required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Start Time: </h2>
+                <h3>YYYY-MM-DD HH:MM:SS</h3>
+                <input type="number" id="event-create-start" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>End Time: </h2>
+                <h3>YYYY-MM-DD HH:MM:SS</h3>
+                <input type="text" id="event-create-end" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Location: </h2>
+                <h3>If Room: "{location here}, Room #"</h3>
+                <input type="text" id="event-create-loc" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Contact Phone: </h2>
+                <input type="text" id="event-create-phone" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Contact Email: </h2>
+                <input type="text" id="event-create-email" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>Event Type: </h2>
+                <h3>(public, private, rso)</h3>
+                <input type="text" id="event-create-type" required>
+            </div>
+            <div class="input-box" id="">
+                <h2>RSO ID: </h2>
+                <h3>if applicable</h3>
+                <input type="number" id="event-create-rso">
+            </div>
+
+            <button type="submit">Create Event</button>
+        </form>
+
+         </div>
         <!--EDIT COM POPUP-->
         <div class="edit-comment-popup" id="edit-comment-popup">
             <form onsubmit="editFormSubmit(event)">
@@ -230,7 +283,7 @@
          </div>
          <!--JOIN RSO POPUP-->
          <div class="rso-join-popup" id="rso-join-popup">
-            <form>
+            <form onsubmit="joinRSOSubmit(event)">
                 <div class="title">
                     <h1>Join RSO</h1>
                 </div>
