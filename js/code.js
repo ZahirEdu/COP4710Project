@@ -766,8 +766,7 @@ async function deleteComment(commentID, UID) {
     }
 }
 
-async function createRSO(event) {
-    event.preventDefault(); // Prevent form submission
+async function createRSO() {
     console.log('Creating RSO...');
     // Get form values
     const rsoData = {
@@ -980,8 +979,6 @@ async function joinRSOSubmit(event) {
 
 document.getElementById('edit-comment-form')?.addEventListener('submit', editFormSubmit);
 document.getElementById('join-rso-form')?.addEventListener('submit', joinRSOSubmit);
-document.getElementById('create-rso-form')?.addEventListener('submit', createRSO);
-document.getElementById('create-event-form')?.addEventListener('submit', createEvent);
 
 
 function toggleRSOForm() {
