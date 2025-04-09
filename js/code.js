@@ -895,8 +895,7 @@ async function editFormSubmit(event) {
     }
 }
 
-async function joinRSOSubmit(event) {
-    event.preventDefault();
+async function joinRSOSubmit() {
     console.log('Joining RSO...');
     const rsoID = document.getElementById('rso-join-id').value;
     const UID = UIDFromCookie;
@@ -1065,8 +1064,8 @@ document.addEventListener('DOMContentLoaded', loadAndDisplayEvents);
 
 
 
-async function createEvent(event) {
-    event.preventDefault();
+async function createEvent() {
+
     console.log('Creating Event...');
     // Get form values
     const form = event.target;
