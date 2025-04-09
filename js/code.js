@@ -977,7 +977,6 @@ async function joinRSOSubmit() {
 
 
 document.getElementById('edit-comment-form')?.addEventListener('submit', editFormSubmit);
-document.getElementById('join-rso-form')?.addEventListener('submit', joinRSOSubmit);
 
 
 function toggleRSOForm() {
