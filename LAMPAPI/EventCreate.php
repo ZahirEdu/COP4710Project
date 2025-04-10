@@ -15,16 +15,10 @@ function returnWithError($err) {
     exit();
 }
 
-// Database connection details (replace with your actual credentials)
-$db_host = "localhost";
-$db_user = "Zahir";
-$db_pass = "k9m2q5i0";
-$db_name = "UniversityEventManagement";
 
 try {
     $inData = getRequestInfo();
 
-    //checking all fields
     $requiredFields = ['name', 'description', 'catID', 'start_time', 'end_time',
                              'locationID', 'contactPhone', 'contactEmail',
                              'eventType', 'UID', 'universityID'];
@@ -40,7 +34,7 @@ try {
         returnWithError("RSO ID is required for RSO events");
     }
 
-    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
     if ($conn->connect_error) {
         returnWithError("Database connection failed: " . $conn->connect_error);
     }

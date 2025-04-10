@@ -1,17 +1,16 @@
 <?php
 header("Content-Type: application/json");
 
-// Connect to database
 $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode(["error" => "Database connection failed", "success" => false]); // Include success: false
+    echo json_encode(["error" => "Database connection failed", "success" => false]); /
     exit();
 }
 
 try {
-    // Query to get only university ID and name
+
     $sql = "SELECT universityID, name FROM universities";
     $result = $conn->query($sql);
 
@@ -27,11 +26,11 @@ try {
         ];
     }
 
-    echo json_encode(["success" => true, "universities" => $universities]); // Wrap in a success object
+    echo json_encode(["success" => true, "universities" => $universities]); 
 
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => $e->getMessage(), "success" => false]); // Include success: false
+    echo json_encode(["error" => $e->getMessage(), "success" => false]); 
 }
 
 $conn->close();

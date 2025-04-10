@@ -7,12 +7,12 @@ if ($conn->connect_error) {
     die(json_encode(["status" => "error", "message" => "connection failed: " . $conn->connect_error]));
 }
 
-// Get raw JSON data from the request body
+
 $json_data = file_get_contents('php://input');
 $data = json_decode($json_data, true);
 
 if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "Invalid JSON data"]);
     $conn->close();
     exit();
@@ -21,7 +21,7 @@ if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
 $address = $data['address'] ?? null;
 
 if (empty($address)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "address is missing in JSON"]);
     $conn->close();
     exit();
@@ -39,7 +39,7 @@ if ($result->num_rows > 0) {
     $response = ["status" => "success", "locations" => $locations];
 } else {
     $response = ["status" => "error", "message" => "no location found"];
-    http_response_code(404); // Not Found
+    http_response_code(404); 
 }
 
 $stmt->close();

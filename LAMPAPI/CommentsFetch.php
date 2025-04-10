@@ -33,8 +33,8 @@ try {
     
     $comments = [];
     while ($row = $result->fetch_assoc()) {
-        $row['createdAt'] = $row['createdAt']; // No need to reformat if it's already DATETIME
-        $row['updatedAtt'] = $row['updatedAtt']; // No need to reformat if it's already DATETIME
+        $row['createdAt'] = $row['createdAt']; 
+        $row['updatedAtt'] = $row['updatedAtt']; 
 
         $comments[] = $row;
     }

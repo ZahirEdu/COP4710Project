@@ -1,11 +1,11 @@
 <?php
 header("Content-Type: application/json");
 
-// Get raw JSON input from Postman
+
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-// Check if UID is provided
+
 if (!isset($data['UID'])) {
     http_response_code(400);
     echo json_encode(["error" => "UID is required"]);
@@ -32,7 +32,6 @@ try {
         throw new Exception("database connection failed");
     }
 
-    // Check if user is super admin
     if (!isSuperAdmin($conn, $UID)) {
         http_response_code(403);
         throw new Exception("unauthorized");

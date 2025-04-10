@@ -4,14 +4,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 header("Content-Type: application/json");
 
-// Database connection details
-$db_host = "localhost";
-$db_user = "Zahir";
-$db_pass = "k9m2q5i0";
-$db_name = "UniversityEventManagement";
-
 try {
-    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
     if ($conn->connect_error) {
         throw new Exception("Database connection failed: " . $conn->connect_error);
     }
@@ -72,11 +66,11 @@ if (!$stmt) {
 }
 
 if ($universityID) {
-    $stmt->bind_param("ii", $universityID, $UID); // Likely line 80
+    $stmt->bind_param("ii", $universityID, $UID); 
 } else {
-    // If no universityID is provided, bind a placeholder that won't match for private events
+    s
     $dummyUniversityID = -1;
-    $stmt->bind_param("ii", $dummyUniversityID, $UID); // Corrected line
+    $stmt->bind_param("ii", $dummyUniversityID, $UID); 
 }
 
     $stmt->execute();

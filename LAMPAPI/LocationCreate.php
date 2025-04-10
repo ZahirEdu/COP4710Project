@@ -6,12 +6,12 @@ if ($conn->connect_error) {
     die(json_encode(["status" => "error", "message" => "connection failed: " . $conn->connect_error]));
 }
 
-// Get raw JSON data from the request body
+
 $json_data = file_get_contents('php://input');
 $data = json_decode($json_data, true);
 
 if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "Invalid JSON data"]);
     $conn->close();
     exit();
@@ -25,7 +25,7 @@ $place_id = $data['place_id'] ?? null;
 $room = $data['room'] ?? null;
 
 if (empty($name) || $lat === null || $lon === null) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "name, latitude, and longitude are required"]);
     $conn->close();
     exit();
@@ -52,10 +52,9 @@ $stmt->bind_param("sddsss", $name, $lat, $lon, $address, $place_id, $room);
 
 if ($stmt->execute()) {
     $response = ["status" => "success", "message" => "location created successfully", "locationID" => $conn->insert_id];
-    http_response_code(201); // Created
-} else {
+    http_response_code(201); 
     $response = ["status" => "error", "message" => "error: " . $stmt->error];
-    http_response_code(500); // Internal Server Error
+    http_response_code(500); 
 }
 
 $stmt->close();

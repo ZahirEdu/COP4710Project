@@ -6,12 +6,12 @@ if ($conn->connect_error) {
     die(json_encode(["status" => "error", "message" => "Connection failed: " . $conn->connect_error]));
 }
 
-// Get raw JSON data from the request body
+
 $json_data = file_get_contents('php://input');
 $data = json_decode($json_data, true);
 
 if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "Invalid JSON data"]);
     $conn->close();
     exit();
@@ -21,14 +21,14 @@ $rsoID = $data['rsoID'] ?? null;
 $UID = $data['UID'] ?? null;
 
 if ($rsoID === null || $UID === null) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "rsoID and UID are required in JSON"]);
     $conn->close();
     exit();
 }
 
 if (!is_numeric($rsoID) || !is_numeric($UID)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(["status" => "error", "message" => "rsoID and UID must be numeric in JSON"]);
     $conn->close();
     exit();
@@ -59,7 +59,7 @@ if ($insertStmt->execute()) {
     $memberCount = $row['memberCount'];
     $countStmt->close();
 
-    http_response_code(201); // Created
+    http_response_code(201); 
     if ($memberCount > 4) {
         $updateStmt = $conn->prepare("UPDATE rsos SET status = 'active' WHERE rsoID = ?");
         $updateStmt->bind_param("i", $rsoID);
@@ -70,7 +70,7 @@ if ($insertStmt->execute()) {
         $response = ["status" => "success", "message" => "Successfully joined RSO."];
     }
 } else {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500); 
     $response = ["status" => "error", "message" => "Error joining RSO: " . $insertStmt->error];
 }
 

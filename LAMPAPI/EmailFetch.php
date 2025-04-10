@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-// Database connection
+
 $conn = new mysqli("localhost", "Zahir", "k9m2q5i0", "UniversityEventManagement");
 if ($conn->connect_error) {
     die(json_encode([
@@ -10,11 +10,11 @@ if ($conn->connect_error) {
     ]));
 }
 
-// Get the email from query parameters
+
 $email = $_GET['email'] ?? null;
 
 if (empty($email)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode([
         'status' => 'error',
         'message' => 'Email parameter is required'
@@ -23,11 +23,11 @@ if (empty($email)) {
     exit();
 }
 
-// Sanitize the email
+
 $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode([
         'status' => 'error',
         'message' => 'Invalid email format'
@@ -36,14 +36,14 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-// Prepare and execute the query
+
 $stmt = $conn->prepare("SELECT UID FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    http_response_code(404); // Not Found
+    http_response_code(404); 
     echo json_encode([
         'status' => 'error',
         'message' => 'User not found'

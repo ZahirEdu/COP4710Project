@@ -10,13 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.querySelector('.form-box.register');
     const createForm = document.querySelector('.form-box.create');
     
-    
-    //initially hide register and create forms, show login form
     registerForm.style.visibility = 'hidden';
     createForm.style.visibility = 'hidden';
     loginForm.style.visibility = 'visible';
 
-    //toggle between login and register forms
+
     document.querySelector('.form-box.register .formText a').addEventListener('click', function(e) {
         e.preventDefault();
         registerForm.style.visibility = 'hidden';
@@ -32,8 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchUniversities();
 
     });
-
-    //show create university form
     document.querySelector('.button2').addEventListener('click', function(e) {
         e.preventDefault();
         registerForm.style.visibility = 'hidden';
@@ -42,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
 
-    //return to login from create university form
+
     document.querySelector('.form-box.create .formText a').addEventListener('click', function(e) {
         e.preventDefault();
         registerForm.style.visibility = 'hidden';
@@ -84,14 +80,14 @@ function doLogin() {
                 let jsonObject = JSON.parse(xhr.responseText);
     
                 if (jsonObject.error) {
-                    document.getElementById("loginResult").innerHTML = jsonObject.error; // Display the error message from the server
+                    document.getElementById("loginResult").innerHTML = jsonObject.error; 
                     return;
                 }
     
                 UID = jsonObject.UID;
     
                 if (UID < 1) {
-                    document.getElementById("loginResult").innerHTML = "Login failed. Please try again."; // Fallback for unexpected UID
+                    document.getElementById("loginResult").innerHTML = "Login failed. Please try again."; 
                     return;
                 }
     
@@ -121,8 +117,7 @@ function saveCookie()
     let minutes = 20;
     let date = new Date();
     date.setTime(date.getTime()+(minutes*60*1000));
-    
-    // Set each cookie separately
+
     document.cookie = "name=" + encodeURIComponent(name) + "; expires=" + date.toGMTString() + "; path=/";
     document.cookie = "email=" + encodeURIComponent(email) + "; expires=" + date.toGMTString() + "; path=/";
     document.cookie = "UID=" + UID + "; expires=" + date.toGMTString() + "; path=/";
@@ -144,14 +139,14 @@ function readCookie() {
         let cookie = cookies[i].trim();
         if (cookie.includes('=')) {
             let [name, value] = cookie.split('=');
-            userData[name] = decodeURIComponent(value); // Decode here
+            userData[name] = decodeURIComponent(value);
         }
     }
 
     nameFromCookie = userData.name;
     emailFromCookie = userData.email;
-    UIDFromCookie = parseInt(userData.UID); // Convert to number
-    universityIDFromCookie = parseInt(userData.universityID); // Convert to number
+    UIDFromCookie = parseInt(userData.UID); 
+    universityIDFromCookie = parseInt(userData.universityID); 
     roleFromCookie = userData.role;
 }
 
@@ -169,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 function doLogout() {
-    // Clear the cookies by setting their expiration date to the past
+
     document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     document.cookie = "UID=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
@@ -182,10 +177,10 @@ function doLogout() {
 
 async function fetchUniversities() {
     const universitySelect = document.getElementById('Runiversity');
-    const url = urlBase + '/UniversitiesFetch.' + extension; // Corrected URL
+    const url = urlBase + '/UniversitiesFetch.' + extension; 
 
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true); // Using GET as no data is being sent in the body
+    xhr.open("GET", url, true); 
 
     try {
         xhr.onreadystatechange = function () {
@@ -210,12 +205,12 @@ async function fetchUniversities() {
                     console.error("Error loading universities:", jsonObject.error);
                 }
             } else if (this.readyState === 4) {
-                // Handle non-200 status codes (errors)
+
                 universitySelect.innerHTML = '<option value="">Error loading universities</option>';
                 console.error("Error loading universities (status " + this.status + ")");
             }
         };
-        xhr.send(); // No data to send for a GET request
+        xhr.send(); 
     } catch (err) {
         universitySelect.innerHTML = '<option value="">Failed to load</option>';
         console.error("Error fetching universities:", err.message);
@@ -228,14 +223,14 @@ function doRegister() {
     let name = document.getElementById("Rname").value;
     let universitySelect = document.getElementById("Runiversity");
     let universityID = universitySelect.value;
-    let role = 'student'; // Automatically set role to 'student'
+    let role = 'student'; 
 
-    document.getElementById("registrationResult").innerHTML = ""; // Assuming you have a span with this ID for feedback
+    document.getElementById("registrationResult").innerHTML = ""; 
 
     let tmp = { email: email, password: password, name: name, role: role, universityID: universityID };
     let jsonPayload = JSON.stringify(tmp);
 
-    let url = urlBase + '/Register.' + extension; // Assuming urlBase and extension are defined
+    let url = urlBase + '/Register.' + extension; 
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -252,11 +247,11 @@ function doRegister() {
                     document.getElementById("registrationResult").innerHTML = "Registration successful! Redirecting to login...";
                     
                     setTimeout(function() {
-                        window.location.reload(); // Or window.location.href = "your_login_page.html";
+                        window.location.reload(); 
                     }, 3000);
                 } else {
                     document.getElementById("registrationResult").innerHTML = "Registration failed. Please try again.";
-                    console.error("Registration error:", jsonObject); // Log unexpected responses
+                    console.error("Registration error:", jsonObject);
                 }
             } else {
                 document.getElementById("registrationResult").innerHTML = "Registration failed due to network error.";
@@ -274,16 +269,16 @@ function doRegister() {
 }
 
 function doRegisterUniversity() {
-    let name = document.getElementById("Dname").value; // Assuming you have a name field for the admin creating the university
-    let email = document.getElementById("Demail").value; // Assuming you have an email field for the admin
-    let password = document.getElementById("Dpassword").value; // Assuming you have a password field for the admin
+    let name = document.getElementById("Dname").value; 
+    let email = document.getElementById("Demail").value; 
+    let password = document.getElementById("Dpassword").value; 
     let uniName = document.getElementById("university").value;
     let description = document.getElementById("description").value;
     let studentCount = document.getElementById("studentCount").value;
 
-    document.getElementById("universityResult").innerHTML = ""; // Assuming you have a span with this ID for feedback
+    document.getElementById("universityResult").innerHTML = ""; 
 
-    // Basic validation (you might want more robust validation)
+
     if (!name || !email || !password || !uniName || !description || !studentCount) {
         document.getElementById("universityResult").innerHTML = "Please fill in all fields.";
         return;
@@ -300,12 +295,12 @@ function doRegisterUniversity() {
         password: password,
         uniName: uniName,
         description: description,
-        studentCount: parseInt(studentCount) // Ensure studentCount is an integer
+        studentCount: parseInt(studentCount) 
     };
 
     let jsonPayload = JSON.stringify(tmp);
 
-    let url = urlBase + '/UniversityCreate.' + extension; // Assuming urlBase and extension are defined
+    let url = urlBase + '/UniversityCreate.' + extension; 
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -321,11 +316,11 @@ function doRegisterUniversity() {
                 } else if (jsonObject.message === "University and super admin created successfully") {
                     document.getElementById("universityResult").innerHTML = "University created successfully! Redirecting to login...";
                     setTimeout(function() {
-                        window.location.reload(); // Or window.location.href = "your_login_page.html";
+                        window.location.reload(); 
                     }, 3000);
                 } else {
                     document.getElementById("universityResult").innerHTML = "University creation failed.";
-                    console.error("University creation error:", jsonObject); // Log unexpected responses
+                    console.error("University creation error:", jsonObject); 
                 }
             } else {
                 document.getElementById("universityResult").innerHTML = "University creation failed due to network error.";
@@ -352,14 +347,14 @@ async function fetchEvents() {;
     }
 
     try {
-        const url = urlBase + '/EventsFetch.' + extension; // The URL of your PHP script
+        const url = urlBase + '/EventsFetch.' + extension; 
 
         const requestOptions = {
-            method: 'POST', // Your PHP script expects a POST request
+            method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ UID: UID, universityID: universityID }) // Send UID and universityID in the request body as JSON
+            body: JSON.stringify({ UID: UID, universityID: universityID }) 
         };
 
         const response = await fetch(url, requestOptions);
@@ -369,31 +364,31 @@ async function fetchEvents() {;
         }
 
         const data = await response.json();
-        return data; // The JSON data fetched from EventsFetch.php
+        return data; 
     } catch (error) {
         console.error("Error fetching events:", error);
-        return null; // Or handle the error as needed in your application
+        return null; 
     }
 }
 
-// Example of how to use the fetchEvents function:
+
 async function loadAndDisplayEvents() {
     const eventsData = await fetchEvents();
     if (eventsData && eventsData.approved_events) {
         console.log("Fetched events:", eventsData.approved_events);
-        // Now you can process and display the eventsData in your HTML
+
         console.log("printing events");
         displayEvents(eventsData.approved_events);
     } else {
         console.log("Failed to load events.");
-        // Handle the case where fetching events failed
+
     }
 }
 
 function displayEvents(events) {
     const dashboardContainer = document.getElementById('dashboard-container');
     if (dashboardContainer) {
-        dashboardContainer.innerHTML = ''; // Clear existing content
+        dashboardContainer.innerHTML = ''; 
         events.forEach(event => {
             const eventCard = document.createElement('div');
             eventCard.dataset.eventId = event.eventID;
@@ -443,13 +438,12 @@ async function showCreateRsoPopup() {
 async function showEventPopup(event) {
     const popup = document.getElementById('eventPopUp');
     
-    // Set all the event information
+
     document.getElementById('event-popup-header').querySelector('h1').textContent = event.name;
     document.getElementById('location').textContent = event.locationName;
     document.getElementById('time').textContent = `${formatDateTime(event.start_time)} - ${formatDateTime(event.end_time)}`;
     document.getElementById('desc').textContent = event.description;
     
-    // Set optional fields (check if they exist first)
     if (event.rsoName) {
         document.getElementById('rso').textContent = event.rsoName;
     } else {
@@ -509,10 +503,10 @@ async function showEventPopup(event) {
         
         if (result.success) {
             alert('Rating submitted successfully!');
-            // Refresh ratings display
+
             const ratingsResult = await fetchAndCalculateAverageRating(event.eventID);
             updateRatingDisplay(ratingsResult);
-            ratingInput.value = ''; // Clear input
+            ratingInput.value = ''; 
         } else {
             alert('Error: ' + result.message);
         }
@@ -533,10 +527,10 @@ async function showEventPopup(event) {
             if (result.error) {
                 alert('Error: ' + result.error);
             } else {
-                // Refresh comments after successful submission
+
                 const comments = await fetchEventComments(event.eventID);
                 displayComments(comments, commentsContainer,event.eventID);
-                commentInput.value = ''; // Clear input
+                commentInput.value = ''; 
             }
         } catch (error) {
             alert('Failed to submit comment: ' + error.message);
@@ -544,15 +538,15 @@ async function showEventPopup(event) {
     });
     
     
-    // Show the popup
+
     popup.style.display = 'block';
     
-    // Add close button functionality
+
     document.getElementById('close-popup').onclick = function() {
         popup.style.display = 'none';
     };
     
-    // Close when clicking outside the popup
+
     popup.addEventListener('click', function(e) {
         if (e.target === popup) {
             popup.style.display = 'none';
@@ -570,7 +564,6 @@ function updateRatingDisplay(ratingsResult) {
 }
 
 function displayComments(comments, container, eventID) {
-    // Clear existing comments
     container.innerHTML = '';
 
     if (comments.length === 0) {
@@ -617,7 +610,6 @@ function displayComments(comments, container, eventID) {
                     if (result.error) {
                         alert('Error: ' + result.error);
                     } else {
-                        // Refresh comments after successful deletion
                         const comments = await fetchEventComments(eventID);
                         displayComments(comments, container, eventID);
                         alert('Comment deleted successfully!');
@@ -651,14 +643,14 @@ async function fetchEventComments(eventID) {
         return data.comments || [];
     } catch (error) {
         console.error('Error fetching comments:', error);
-        return []; // Return empty array on error
+        return []; 
     }
 }
 
 
 async function fetchAndCalculateAverageRating(eventID) {
     try {
-        // Fetch ratings from the API
+
         const response = await fetch(`https://zahirgutierrez.com/LAMPAPI/RatingsFetch.php?eventID=${eventID}`);
         
         if (!response.ok) {
@@ -667,20 +659,20 @@ async function fetchAndCalculateAverageRating(eventID) {
         
         const data = await response.json();
         
-        // Check if ratings exist
+  
         if (data.status !== 'success' || !data.ratings || data.ratings.length === 0) {
-            return { average: 0, count: 0 }; // Return 0 if no ratings
+            return { average: 0, count: 0 }; 
         }
         
-        // Calculate average and round up
+
         const ratings = data.ratings;
         const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
-        const average = Math.ceil(sum / ratings.length); // Round UP to nearest whole number
+        const average = Math.ceil(sum / ratings.length); 
         
         return {
             average: average,
             count: ratings.length,
-            ratings: ratings // Optional: include all ratings if needed
+            ratings: ratings 
         };
         
     } catch (error) {
@@ -768,7 +760,7 @@ async function deleteComment(commentID, UID) {
 
 async function createRSO() {
     console.log('Creating RSO...');
-    // Get form values
+
     const rsoData = {
         name: document.getElementById('rso-create-name').value,
         description: document.getElementById('rso-create-desc').value,
@@ -777,7 +769,7 @@ async function createRSO() {
         status: 'active'
     };
 
-    // Get member emails (filter out empty ones)
+   
     const memberEmails = [
         document.getElementById('rso-create-mem1').value,
         document.getElementById('rso-create-mem2').value,
@@ -786,7 +778,7 @@ async function createRSO() {
     ].filter(email => email.trim() !== '');
 
     try {
-        // Step 1: Create the RSO
+        
         const rsoResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/RSOCreate.php', {
             method: 'POST',
             headers: {
@@ -803,19 +795,18 @@ async function createRSO() {
 
         const rsoID = rsoResult.rsoID;
         
-        // Step 2: Add members to the RSO
         for (const email of memberEmails) {
             try {
-                // Fetch UID for each member email
+                
                 const uidResponse = await fetch(`https://zahirgutierrez.com/LAMPAPI/EmailFetch.php?email=${encodeURIComponent(email)}`);
                 const uidResult = await uidResponse.json();
                 
                 if (uidResult.status !== 'success') {
                     console.error(`Failed to find user with email ${email}:`, uidResult.message);
-                    continue; // Skip to next member if this one fails
+                    continue; 
                 }
 
-                // Add member to RSO
+                
                 const joinData = {
                     rsoID: rsoID,
                     UID: uidResult.UID
@@ -839,9 +830,9 @@ async function createRSO() {
             }
         }
 
-        // Success message
+
         alert('RSO created successfully with members added!');
-        // Optionally close the popup or reset the form
+        
         document.getElementById('close-popup').click();
         
     } catch (error) {
@@ -1051,22 +1042,17 @@ async function pendingEventsLoad() {
 document.getElementById('rso-create-popup').addEventListener('click', toggleRSOForm);
 
 
-
-// Helper function to format datetime (you might want a more robust one)
 function formatDateTime(dateTimeString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateTimeString).toLocaleDateString(undefined, options);
 }
 
-// Call loadAndDisplayEvents when the page loads (or at the appropriate time)
 document.addEventListener('DOMContentLoaded', loadAndDisplayEvents);
-
-
 
 async function createEvent() {
 
     console.log('Creating Event...');
-    // Get form values
+
     const form = event.target;
     const formData = {
         name: document.getElementById('event-create-name').value,
@@ -1082,7 +1068,6 @@ async function createEvent() {
         universityID: universityIDFromCookie
     };
 
-    // Validate required fields
     if (!formData.name || !formData.description || !formData.start_time || 
         !formData.end_time || !formData.address || !formData.contactPhone || 
         !formData.contactEmail || !formData.eventType || !formData.UID || 
@@ -1092,7 +1077,7 @@ async function createEvent() {
     }
 
     try {
-        // Step 1: Check if location exists
+
         let locationID;
         const locationSearchResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/LocationSearch.php', {
             method: 'POST',
@@ -1105,12 +1090,10 @@ async function createEvent() {
         const locationSearchResult = await locationSearchResponse.json();
 
         if (locationSearchResult.status === 'success') {
-            // Location exists, use its ID
+
             locationID = locationSearchResult.locationID;
         } else {
-            // Location doesn't exist, create it
-            // Note: You'll need to implement geocoding to get lat/lon in a real app
-            // For now using placeholder coordinates
+
             const locationCreateResponse = await fetch('https://zahirgutierrez.com/LAMPAPI/LocationCreate.php', {
                 method: 'POST',
                 headers: {
@@ -1118,8 +1101,8 @@ async function createEvent() {
                 },
                 body: JSON.stringify({
                     name: formData.address,
-                    lat: 0.0, // Replace with actual geocoding in production
-                    lon: 0.0, // Replace with actual geocoding in production
+                    lat: 0.0,
+                    lon: 0.0, 
                     address: formData.address
                 })
             });
@@ -1133,11 +1116,11 @@ async function createEvent() {
             locationID = locationCreateResult.locationID;
         }
 
-        // Step 2: Create the event
+
         const eventData = {
             name: formData.name,
             description: formData.description,
-            catID: 1, // Always set to 1 as per requirements
+            catID: 1, 
             start_time: formData.start_time,
             end_time: formData.end_time,
             locationID: locationID,
@@ -1161,7 +1144,6 @@ async function createEvent() {
 
         if (eventCreateResult.status === 'success') {
             alert('Event created successfully!');
-            // Optional: Reset form or redirect
             event.target.reset();
         } else {
             throw new Error(eventCreateResult.message || 'Failed to create event');
